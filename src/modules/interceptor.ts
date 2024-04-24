@@ -38,24 +38,74 @@ export class Interceptor {
         return response;
       };
     }
-
+    this.axios.interceptors.response.use(this.responseDecodeInterceptor);
     this.axios.interceptors.response.use(this.responseInterceptor);
+    this.axios.interceptors.response.use(this.responseEncodeInterceptor);
   }
 
+  /**
+   * 请求拦截器
+   * @param request
+   * @returns
+   */
   private async requestInterceptor(request: any) {
     return request;
   }
 
-  private async responseInterceptor(response: any) {
-    var data = response.data;
-    const url = response.config.url.toLowerCase();
+  /**
+   * 对返回数据进行解码
+   * @param response
+   */
+  private async responseDecodeInterceptor(response: any) {
+    if (response.data.status === 200) {
+      const responseData = response.data;
+
+      response = {
+        ...responseData,
+        mobile: true,
+        original: responseData,
+      };
+    } else {
+      response = {
+        data: response.data.data,
+        url: response.config.url,
+        mobile: false,
+        original: response.data,
+      };
+    }
+    return response;
+  }
+
+  /**
+   * 对reponse重新编码
+   * @param response
+   * @returns
+   */
+  private async responseEncodeInterceptor(response: any) {
+    if (response.mobile === false) {
+      console.log("返回数据", {
+        ...response.original,
+        data: response.data,
+      });
+
+      return {
+        ...response.original,
+        data: response.data,
+      };
+    }
+  }
+
+  private async responseInterceptor(data: any) {
+    const url = data.url.toLowerCase();
+    var apiData = data.data;
+    console.log("拦截器", url, data);
 
     if (/topic\/\d+/g.test(url)) {
-      await Interceptor.fixTopic(data.data);
+      apiData = await Interceptor.fixTopic(apiData);
     } else if (/banner\/banner_list/g.test(url)) {
-      data = await Interceptor.fixAds(data.data);
+      apiData = await Interceptor.fixAds(apiData);
     }
-
+    data.data = apiData;
     return data;
   }
   private static async fixTopic(data: any) {
@@ -120,6 +170,7 @@ export class Interceptor {
     }
     console.log(content);
     data.content = content;
+    return data;
   }
 
   /**
