@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 解锁海角社区VIP帖子,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        0.0.5
+// @version        0.0.6
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -18,6 +18,7 @@
   'use strict';
 
   var __webpack_require__ = undefined;
+  var VUE = undefined;
   var AXIOS = undefined;
   var callback = undefined;
   function initHookWebpack(initialed) {
@@ -37,7 +38,7 @@
     };
   }
   function importModules() {
-    __webpack_require__("2b0e").default;
+    VUE = __webpack_require__("2b0e").default;
     __webpack_require__("4360").a;
     AXIOS = __webpack_require__("bc3a");
     AXIOS = getObject(AXIOS);
@@ -96,23 +97,87 @@
           return response;
         };
       }
+      this.axios.interceptors.response.use(this.responseDecodeInterceptor);
       this.axios.interceptors.response.use(this.responseInterceptor);
+      this.axios.interceptors.response.use(this.responseEncodeInterceptor);
     }
+
+    /**
+     * 请求拦截器
+     * @param request
+     * @returns
+     */
     async requestInterceptor(request) {
       return request;
     }
-    async responseInterceptor(response) {
-      var data = response.data;
-      const url = response.config.url.toLowerCase();
-      if (/topic\/\d+/g.test(url)) {
-        await Interceptor.fixTopic(data.data);
-      } else if (/banner\/banner_list/g.test(url)) {
-        data = await Interceptor.fixAds(data.data);
+
+    /**
+     * 对返回数据进行解码
+     * @param response
+     */
+    async responseDecodeInterceptor(response) {
+      if (response.data.status === 200) {
+        const origin_response = JSON.parse(JSON.stringify(response.data.data));
+        var enc_data = response.data.data.data;
+        if (enc_data && typeof enc_data === "string" && enc_data.length > 0) {
+          enc_data = JSON.parse(window.atob(window.atob(window.atob(enc_data))));
+        }
+        response = {
+          item: enc_data,
+          url: response.config.url,
+          mobile: true,
+          origin_response: origin_response
+        };
+      } else {
+        // 克隆一个原始请求
+        const origin_response = JSON.parse(JSON.stringify(response.data));
+        const item = JSON.parse(JSON.stringify(response.data.data));
+        response = {
+          item: item,
+          url: response.config.url,
+          mobile: false,
+          origin_response: origin_response
+        };
       }
-      return data;
+      return response;
+    }
+
+    /**
+     * 对reponse重新编码
+     * @param response
+     * @returns
+     */
+    async responseEncodeInterceptor(response) {
+      if (response.mobile === true) {
+        var dec = response.item;
+        if (response.origin_response.isEncrypted === true) {
+          dec = window.btoa(window.btoa(window.btoa(JSON.stringify(response.item))));
+        }
+        return {
+          data: {
+            ...response.origin_response,
+            data: dec
+          }
+        };
+      } else {
+        return {
+          ...response.origin_response,
+          data: response.item
+        };
+      }
+    }
+    async responseInterceptor(response) {
+      const url = response.url.toLowerCase();
+      var item = response.item;
+      if (/topic\/\d+/g.test(url)) {
+        item = await Interceptor.fixTopic(item, response.mobile);
+      } else if (/banner\/banner_list/g.test(url)) {
+        item = await Interceptor.fixAds(item);
+      }
+      response.item = item;
+      return response;
     }
     static async fixTopic(data) {
-      console.log("修正帖子内容", data);
       if (data.node?.vipLimit > 0) {
         data.node.vipLimit = 0;
       }
@@ -129,7 +194,12 @@
             console.log("获取视频链接", data.attachments[i]);
             try {
               const response = await Interceptor.getAttment(data.topicId, data.attachments[i].id);
-              data.attachments[i] = response.data;
+              var videoData = response.data.hasOwnProperty("data") ? response.data.data : response.data;
+              if (videoData && typeof videoData === "string" && videoData.length > 0) {
+                videoData = JSON.parse(window.atob(window.atob(window.atob(videoData))));
+              }
+              data.attachments[i] = videoData;
+              console.log("获取视频链接成功", data.attachments[i]);
             } catch (e) {
               data.attachments[i].remoteUrl = "";
               data.attachments[i].error = e;
@@ -150,7 +220,7 @@
           if (attachment.category === "video") {
             if (attachment.remoteUrl) {
               hasVideo = true;
-              content += `<div class="video-div" data-id="${attachment.id}" id="video_${attachment.id}_${new Date().getTime()}" key-path="${attachment.keyPath}" data-url="${attachment.remoteUrl}"></div><div data-id="${attachment.id}" id="video_${attachment.id}_${new Date().getTime()}" class="video-div-btn" key-path="${attachment.keyPath}" data-url="${attachment.remoteUrl}"></div>`;
+              content += `<p><video src="${attachment.remoteUrl}" data-id="${attachment.id}"></video></p>`;
             } else {
               console.log("视频链接为空", attachment);
               content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
@@ -162,8 +232,8 @@
         });
         content = `<html><head></head><body>${content}</body></html>`;
       }
-      console.log(content);
       data.content = content;
+      return data;
     }
 
     /**
@@ -171,8 +241,7 @@
      * @param data
      */
     static async fixAds(data) {
-      if (data) data = [];
-      return data;
+      return null;
     }
     /**
      * 获取帖子附件
@@ -181,13 +250,24 @@
      */
     static async getAttment(pid, aid) {
       const url = `/api/attachment`;
+      var headers = {};
+      if (VUE.$cookies) {
+        const uid = VUE.$cookies.get("uid");
+        const token = VUE.$cookies.get("token");
+        headers = {
+          "X-User-Id": uid,
+          "X-User-Token": token
+        };
+      }
       const data = {
         id: aid,
         resource_id: pid,
         reource_type: "topic",
         line: ""
       };
-      return AXIOS.post(url, data);
+      return AXIOS.post(url, data, {
+        headers: headers
+      });
     }
   }
 
