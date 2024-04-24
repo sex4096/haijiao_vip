@@ -1,10 +1,9 @@
-
 // ==UserScript==
-// @name           haijiao-vip
+// @name           haijiao-vip: 海角社区- 解锁VIP帖子,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
 // @version        0.0.1
 // @author         sex4096
-// @description    解锁海角VIP帖子,并去除网站广告, TG讨论群:@svip_hj
+// @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj
 // @include        *
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
 // @supportURL     https://github.com/sex4096/haijiao_vip/issue
@@ -14,7 +13,7 @@
 // @match          https://www.haijiao.com/*
 // ==/UserScript==
 (function () {
-  'use strict';
+  "use strict";
 
   var __webpack_require__ = undefined;
   var VUE = undefined;
@@ -26,11 +25,21 @@
     callback = initialed;
     let originCall = Function.prototype.call;
     Function.prototype.call = function () {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      for (
+        var _len = arguments.length, args = new Array(_len), _key = 0;
+        _key < _len;
+        _key++
+      ) {
         args[_key] = arguments[_key];
       }
       const result = originCall.apply(this, args);
-      if (args.length === 4 && args[1] && args[1].exports && args[0] === args[2] && __webpack_require__ === undefined) {
+      if (
+        args.length === 4 &&
+        args[1] &&
+        args[1].exports &&
+        args[0] === args[2] &&
+        __webpack_require__ === undefined
+      ) {
         __webpack_require__ = args[3];
         Function.prototype.call = originCall;
         importModules();
@@ -48,19 +57,23 @@
     callback(VUE, STORE, AXIOS);
   }
   function getObject(module) {
-    const t = module && module.__esModule ? function () {
-      return module.default;
-    } : function () {
-      return module;
-    };
+    const t =
+      module && module.__esModule
+        ? function () {
+            return module.default;
+          }
+        : function () {
+            return module;
+          };
     defineObject(t, "a", t);
     return t;
   }
   function defineObject(module, key, value) {
-    Object.prototype.hasOwnProperty.call(module, key) || Object.defineProperty(module, key, {
-      enumerable: true,
-      get: value
-    });
+    Object.prototype.hasOwnProperty.call(module, key) ||
+      Object.defineProperty(module, key, {
+        enumerable: true,
+        get: value,
+      });
   }
 
   /**
@@ -90,11 +103,13 @@
       // 因为返回处理会处理掉config,而我们需要config中的url,所以需要在返回处理之前处理
       if (this.axios.interceptors.response.handlers?.[0].fulfilled) {
         const origin = this.axios.interceptors.response.handlers?.[0].fulfilled;
-        this.axios.interceptors.response.handlers[0].fulfilled = async response => {
+        this.axios.interceptors.response.handlers[0].fulfilled = async (
+          response
+        ) => {
           const data = await origin(response);
           response = {
             data: data,
-            config: response.config
+            config: response.config,
           };
           return response;
         };
@@ -128,10 +143,16 @@
         content = content.replace(/\[sell.*\/sell]/g, "");
         // 首先针对没有获取到链接的视频进行一次处理
         for (var i = 0; i < data.attachments.length; i++) {
-          if (data.attachments[i].category === "video" && !data.attachments[i].remoteUrl) {
+          if (
+            data.attachments[i].category === "video" &&
+            !data.attachments[i].remoteUrl
+          ) {
             console.log("获取视频链接", data.attachments[i]);
             try {
-              const response = await Interceptor.getAttment(data.topicId, data.attachments[i].id);
+              const response = await Interceptor.getAttment(
+                data.topicId,
+                data.attachments[i].id
+              );
               data.attachments[i] = response.data;
             } catch (e) {
               data.attachments[i].remoteUrl = "";
@@ -139,12 +160,13 @@
             }
           }
         }
-        data.attachments?.forEach(attachment => {
+        data.attachments?.forEach((attachment) => {
           var hasImage,
             hasVideo = false;
           // 处理图片
           if (attachment.category === "images" && attachment.remoteUrl) {
-            content = content += `<p><img src="${attachment.remoteUrl}" data-id="${attachment.id}"/>`;
+            content =
+              content += `<p><img src="${attachment.remoteUrl}" data-id="${attachment.id}"/>`;
             hasImage = true;
           }
           if (hasImage === true) {
@@ -189,7 +211,7 @@
         id: aid,
         resource_id: pid,
         reource_type: "topic",
-        line: ""
+        line: "",
       };
       return API.post(url, data);
     }
@@ -201,5 +223,4 @@
     interceptor.initResponseInterceptor();
   }
   initHookWebpack(initialed);
-
 })();
