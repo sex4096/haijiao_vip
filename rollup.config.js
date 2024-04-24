@@ -1,85 +1,85 @@
 // rollup.config.js
-import { defineConfig } from 'rollup'
-import userScriptHeader from 'rollup-plugin-tampermonkey-header'
-import path from 'path'
-import fs from 'fs'
+import { defineConfig } from "rollup";
+import userScriptHeader from "rollup-plugin-tampermonkey-header";
+import path from "path";
+import fs from "fs";
 
 const userDefinedOptions = {
-  metaPath: path.resolve(__dirname, 'src', 'meta.json')
-}
+  metaPath: path.resolve(__dirname, "src", "meta.json"),
+};
 
 const isObject = (arg) => {
-  return Object.prototype.toString.call(arg) === '[object Object]'
-}
+  return Object.prototype.toString.call(arg) === "[object Object]";
+};
 const mergeRollupConfigs = function (object, ...sources) {
   sources.forEach((source) => {
     if (!isObject(source)) {
-      return
+      return;
     }
     Object.entries(source).forEach(([name, value]) => {
       if (name in object) {
         if (value === null || value === undefined) {
-          return
+          return;
         }
-        const objectValue = object[name]
+        const objectValue = object[name];
         if (Array.isArray(objectValue)) {
-          if (name === 'plugins') {
-            const pluginNames = objectValue.map((plugin) => plugin.name)
+          if (name === "plugins") {
+            const pluginNames = objectValue.map((plugin) => plugin.name);
             value.forEach((plugin) => {
-              const index = pluginNames.indexOf(plugin.name)
+              const index = pluginNames.indexOf(plugin.name);
               if (index > -1) {
-                Object.assign(objectValue[index], plugin)
+                Object.assign(objectValue[index], plugin);
               } else {
-                objectValue.push(plugin)
+                objectValue.push(plugin);
               }
-            })
+            });
           } else {
             object[name] = Array.from(
               new Set([
                 ...objectValue,
-                ...(typeof value === 'object' ? Object.values(value) : [value])
+                ...(typeof value === "object" ? Object.values(value) : [value]),
               ])
-            )
+            );
           }
         } else if (isObject(objectValue)) {
-          Object.assign(object[name], value)
+          Object.assign(object[name], value);
         } else {
-          object[name] = value
+          object[name] = value;
         }
       } else {
-        object[name] = value
+        object[name] = value;
       }
-    })
-  })
-  return object
-}
+    });
+  });
+  return object;
+};
 
-const commonConfigs = require('./rollup_configs/default.js')
-const rollupConfigsPath = require('path').join(__dirname, 'rollup_configs')
+const commonConfigs = require("./rollup_configs/default.js");
+const rollupConfigsPath = require("path").join(__dirname, "rollup_configs");
 try {
-  const files = fs.readdirSync(rollupConfigsPath)
+  const files = fs.readdirSync(rollupConfigsPath);
   files.forEach(function (file) {
-    if (file === 'default.js') return
-    const configs = require('./rollup_configs/' + file).default
-    mergeRollupConfigs(commonConfigs, configs)
-  })
+    if (file === "default.js") return;
+    const configs = require("./rollup_configs/" + file).default;
+    mergeRollupConfigs(commonConfigs, configs);
+  });
 } catch (err) {
-  console.log(err)
+  console.log(err);
 }
 
 function devConfigs() {
-  let userScriptHeaderContent = []
-  const outputFileName = 'main.dev.user'
-  const outputFile = `${outputFileName}.js`
+  let userScriptHeaderContent = [];
+  const outputFileName = "main.dev.user";
+  const outputFile = `${outputFileName}.js`;
   return defineConfig({
-    input: { [outputFileName]: 'src/main.ts' },
+    input: { [outputFileName]: "src/main.ts" },
     output: {
-      dir: 'dist',
-      format: 'iife',
-      sourcemap: 'inline'
+      dir: "dist",
+      format: "iife",
+      sourcemap: "inline",
     },
     watch: {
-      exclude: 'dist'
+      exclude: "dist",
     },
     plugins: [
       ...commonConfigs.plugins,
@@ -87,91 +87,97 @@ function devConfigs() {
         metaPath: userDefinedOptions.metaPath,
         transformHeaderContent(items) {
           const newItems = items
-            .filter(([name]) => !['@supportURL', '@updateURL', '@downloadURL'].includes(name))
+            .filter(
+              ([name]) =>
+                !["@supportURL", "@updateURL", "@downloadURL"].includes(name)
+            )
             .map(([name, value]) => {
-              if (name === '@name') {
-                return [name, `${value} Dev`]
+              if (name === "@name") {
+                return [name, `${value} Dev`];
               } else {
-                return [name, value]
+                return [name, value];
               }
-            })
-          userScriptHeaderContent = [...newItems]
-          return newItems
+            });
+          userScriptHeaderContent = [...newItems];
+          return newItems;
         },
-        outputFile
+        outputFile,
       }),
-      devEntryPlugin(outputFile)
-    ]
-  })
+      devEntryPlugin(outputFile),
+    ],
+  });
 
   function devEntryPlugin(outputFileName) {
-    let headerPluginApi
-    let devFileContentCache = ''
+    let headerPluginApi;
+    let devFileContentCache = "";
     return {
-      name: 'generate-dev-entry',
+      name: "generate-dev-entry",
       buildStart(options) {
-        const { plugins } = options
-        const pluginName = 'tampermonkey-header'
-        const headerPlugin = plugins.find((plugin) => plugin.name === 'tampermonkey-header')
+        const { plugins } = options;
+        const pluginName = "tampermonkey-header";
+        const headerPlugin = plugins.find(
+          (plugin) => plugin.name === "tampermonkey-header"
+        );
         if (!headerPlugin) {
           // or handle this silently if it is optional
-          throw new Error(`This plugin depends on the "${pluginName}" plugin.`)
+          throw new Error(`This plugin depends on the "${pluginName}" plugin.`);
         }
         // now you can access the API methods in subsequent hooks
-        headerPluginApi = headerPlugin.api
+        headerPluginApi = headerPlugin.api;
       },
       generateBundle(options) {
-        const { dir } = options
-        const filePath = path.resolve(__dirname, dir, outputFileName)
-        userScriptHeaderContent.push(['@require', filePath])
-        const devFileName = 'dev.user.js'
-        const devFilePath = path.resolve(__dirname, dir, devFileName)
+        const { dir } = options;
+        const filePath = path.resolve(__dirname, dir, outputFileName);
+        userScriptHeaderContent.push(["@require", filePath]);
+        const devFileName = "dev.user.js";
+        const devFilePath = path.resolve(__dirname, dir, devFileName);
         const devFileContent =
-          headerPluginApi?.generateUserScriptHeader(userScriptHeaderContent) ?? ''
+          headerPluginApi?.generateUserScriptHeader(userScriptHeaderContent) ??
+          "";
 
         if (devFileContentCache !== devFileContent) {
           this.emitFile({
-            type: 'asset',
+            type: "asset",
             fileName: devFileName,
-            source: devFileContent
-          })
+            source: devFileContent,
+          });
 
           if (!devFileContentCache) {
             console.log(
-              '\n✅Dev plugin is created. Please paste the path to browser and install in Tampermonkey: \n\x1b[1m\x1b[4m\x1b[36m%s\x1b[0m\n',
+              "\n✅Dev plugin is created. Please paste the path to browser and install in Tampermonkey: \n\x1b[1m\x1b[4m\x1b[36m%s\x1b[0m\n",
               devFilePath
-            )
+            );
           } else {
             console.log(
-              '\n🔥Dev plugin need re-install. Please paste the path to browser and reinstall in Tampermonkey: \n\x1b[1m\x1b[4m\x1b[36m%s\x1b[0m\n',
+              "\n🔥Dev plugin need re-install. Please paste the path to browser and reinstall in Tampermonkey: \n\x1b[1m\x1b[4m\x1b[36m%s\x1b[0m\n",
               devFilePath
-            )
+            );
           }
 
-          devFileContentCache = devFileContent
+          devFileContentCache = devFileContent;
         }
-      }
-    }
+      },
+    };
   }
 }
 
 function prodConfigs() {
-  const outputFile = 'main.user.js'
+  const outputFile = "haijiao.js";
   return defineConfig({
-    input: 'src/main.ts',
+    input: "src/main.ts",
     output: {
       file: outputFile,
-      format: 'iife'
+      format: "iife",
     },
     plugins: [
       ...commonConfigs.plugins,
       userScriptHeader({
         metaPath: userDefinedOptions.metaPath,
-        outputFile
-      })
-    ]
-  })
+        outputFile,
+      }),
+    ],
+  });
 }
 
-const isDev = process.env.BUILD === 'development'
-export default isDev ? devConfigs() : prodConfigs()
+const isDev = process.env.BUILD === "development";
+export default isDev ? devConfigs() : prodConfigs();

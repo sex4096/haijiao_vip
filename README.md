@@ -25,7 +25,7 @@ TG讨论群:`@svip_hj`
 
 ## 安装
 
-正常Tampermonkey安装即可,脚本无任何依赖.
+正常Tampermonkey安装`haijiao.js`即可,脚本无任何依赖.
 
 ## 闲聊
 
