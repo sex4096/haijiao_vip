@@ -1,0 +1,6 @@
+{
+  "@include": "*",
+  "@run-at": "document-idle",
+  "@require": "https://code.jquery.com/jquery-3.6.0.min.js",
+  "@match": "https://www.haijiao.com/*"
+}
