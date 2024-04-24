@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 解锁海角社区VIP帖子,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        0.0.4
+// @version        0.0.5
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -18,10 +18,7 @@
   'use strict';
 
   var __webpack_require__ = undefined;
-  var VUE = undefined;
-  var STORE = undefined;
   var AXIOS = undefined;
-  var API = undefined;
   var callback = undefined;
   function initHookWebpack(initialed) {
     callback = initialed;
@@ -40,13 +37,12 @@
     };
   }
   function importModules() {
-    VUE = __webpack_require__("2b0e").default;
-    STORE = __webpack_require__("4360").a;
-    API = __webpack_require__("ec7a").a;
+    __webpack_require__("2b0e").default;
+    __webpack_require__("4360").a;
     AXIOS = __webpack_require__("bc3a");
     AXIOS = getObject(AXIOS);
     AXIOS = AXIOS.a;
-    callback(VUE, STORE, AXIOS);
+    callback();
   }
   function getObject(module) {
     const t = module && module.__esModule ? function () {
@@ -184,15 +180,14 @@
      * @param aid
      */
     static async getAttment(pid, aid) {
-      const DOMAIN = STORE.state.configUrl.domain;
-      const url = `${DOMAIN}/api/attachment`;
+      const url = `/api/attachment`;
       const data = {
         id: aid,
         resource_id: pid,
         reource_type: "topic",
         line: ""
       };
-      return API.post(url, data);
+      return AXIOS.post(url, data);
     }
   }
 

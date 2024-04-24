@@ -1,4 +1,4 @@
-import { API, STORE } from "./webpack";
+import { AXIOS, STORE } from "./webpack";
 
 /**
  * 自定义拦截器
@@ -136,8 +136,7 @@ export class Interceptor {
    * @param aid
    */
   private static async getAttment(pid: number, aid: number) {
-    const DOMAIN = STORE.state.configUrl.domain;
-    const url = `${DOMAIN}/api/attachment`;
+    const url = `/api/attachment`;
     const data = {
       id: aid,
       resource_id: pid,
@@ -145,6 +144,6 @@ export class Interceptor {
       line: "",
     };
 
-    return API.post(url, data);
+    return AXIOS.post(url, data);
   }
 }

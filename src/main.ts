@@ -1,5 +1,5 @@
 import { Interceptor } from "./modules/interceptor";
-import { STORE, VUE, AXIOS, initHookWebpack } from "./modules/webpack";
+import { AXIOS, initHookWebpack } from "./modules/webpack";
 
 function initialed() {
   const interceptor = new Interceptor(AXIOS);

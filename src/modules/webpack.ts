@@ -2,7 +2,7 @@ var __webpack_require__: any = undefined;
 export var VUE: any = undefined;
 export var STORE: any = undefined;
 export var AXIOS: any = undefined;
-export var API: any = undefined;
+export var BASE64: any = undefined;
 var callback: any = undefined;
 export function initHookWebpack(initialed: CallableFunction) {
   callback = initialed;
@@ -28,12 +28,11 @@ export function initHookWebpack(initialed: CallableFunction) {
 function importModules() {
   VUE = __webpack_require__("2b0e").default;
   STORE = __webpack_require__("4360").a;
-  API = __webpack_require__("ec7a").a;
   AXIOS = __webpack_require__("bc3a");
   AXIOS = getObject(AXIOS);
   AXIOS = AXIOS.a;
 
-  callback(VUE, STORE, AXIOS);
+  callback();
 }
 
 function getObject(module: any) {
