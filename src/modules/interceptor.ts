@@ -58,19 +58,26 @@ export class Interceptor {
    */
   private async responseDecodeInterceptor(response: any) {
     if (response.data.status === 200) {
-      const responseData = response.data;
-
+      const origin_response = JSON.parse(JSON.stringify(response.data.data));
+      var enc_data = response.data.data.data;
+      if (enc_data && typeof enc_data === "string" && enc_data.length > 0) {
+        enc_data = JSON.parse(window.atob(window.atob(window.atob(enc_data))));
+      }
       response = {
-        ...responseData,
+        item: enc_data,
+        url: response.config.url,
         mobile: true,
-        original: responseData,
+        origin_response: origin_response,
       };
     } else {
+      // 克隆一个原始请求
+      const origin_response = JSON.parse(JSON.stringify(response.data));
+      const item = JSON.parse(JSON.stringify(response.data.data));
       response = {
-        data: response.data.data,
+        item: item,
         url: response.config.url,
         mobile: false,
-        original: response.data,
+        origin_response: origin_response,
       };
     }
     return response;
@@ -82,31 +89,39 @@ export class Interceptor {
    * @returns
    */
   private async responseEncodeInterceptor(response: any) {
-    if (response.mobile === false) {
-      console.log("返回数据", {
-        ...response.original,
-        data: response.data,
-      });
+    if (response.mobile === true) {
+      var dec = response.item;
+      if (response.origin_response.isEncrypted === true) {
+        dec = window.btoa(
+          window.btoa(window.btoa(JSON.stringify(response.item)))
+        );
+      }
 
       return {
-        ...response.original,
-        data: response.data,
+        data: {
+          ...response.origin_response,
+          data: dec,
+        },
+      };
+    } else {
+      return {
+        ...response.origin_response,
+        data: response.item,
       };
     }
   }
 
-  private async responseInterceptor(data: any) {
-    const url = data.url.toLowerCase();
-    var apiData = data.data;
-    console.log("拦截器", url, data);
+  private async responseInterceptor(response: any) {
+    const url = response.url.toLowerCase();
+    var item = response.item;
 
     if (/topic\/\d+/g.test(url)) {
-      apiData = await Interceptor.fixTopic(apiData);
+      item = await Interceptor.fixTopic(item);
     } else if (/banner\/banner_list/g.test(url)) {
-      apiData = await Interceptor.fixAds(apiData);
+      item = await Interceptor.fixAds(item);
     }
-    data.data = apiData;
-    return data;
+    response.item = item;
+    return response;
   }
   private static async fixTopic(data: any) {
     console.log("修正帖子内容", data);
@@ -178,8 +193,7 @@ export class Interceptor {
    * @param data
    */
   private static async fixAds(data: any) {
-    if (data) data = [];
-    return data;
+    return null;
   }
   /**
    * 获取帖子附件
