@@ -42,5 +42,6 @@
     "@babel/preset-env": "^7.15.8",
     "@rollup/plugin-babel": "^5.3.0"
   },
-  "browserslist": "chrome >= 31, edge >= 20, safari >= 6, firefox >= 52, opera >= 15 and > 0.2%"
+  "browserslist": "chrome >= 31, edge >= 20, safari >= 6, firefox >= 52, opera >= 15 and > 0.2%",
+  "license": "MIT"
 }

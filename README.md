@@ -2,6 +2,8 @@
 
 该脚本完全免费并开源,遵守MIT协议.
 
+开源代码托管在: [haijiao_vip](https://github.com/sex4096/haijiao_vip/)
+
 TG讨论群:`@svip_hj`
 
 ## 功能
