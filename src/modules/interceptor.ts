@@ -1,4 +1,4 @@
-import { AXIOS, STORE } from "./webpack";
+import { AXIOS, VUE } from "./webpack";
 
 /**
  * 自定义拦截器
@@ -116,19 +116,19 @@ export class Interceptor {
     var item = response.item;
 
     if (/topic\/\d+/g.test(url)) {
-      item = await Interceptor.fixTopic(item);
+      item = await Interceptor.fixTopic(item, response.mobile);
     } else if (/banner\/banner_list/g.test(url)) {
       item = await Interceptor.fixAds(item);
     }
     response.item = item;
     return response;
   }
-  private static async fixTopic(data: any) {
-    console.log("修正帖子内容", data);
+  private static async fixTopic(data: any, mobile: boolean = false) {
     if (data.node?.vipLimit > 0) {
       data.node.vipLimit = 0;
     }
     var content = data.content;
+
     if (content && !content.startsWith("<html><head></head><body>")) {
       // 删除掉[]标签
       content = content.replace(/\[视频\]/g, "");
@@ -147,7 +147,22 @@ export class Interceptor {
               data.topicId,
               data.attachments[i].id
             );
-            data.attachments[i] = response.data;
+
+            var videoData = response.data.hasOwnProperty("data")
+              ? response.data.data
+              : response.data;
+            if (
+              videoData &&
+              typeof videoData === "string" &&
+              videoData.length > 0
+            ) {
+              videoData = JSON.parse(
+                window.atob(window.atob(window.atob(videoData)))
+              );
+            }
+
+            data.attachments[i] = videoData;
+            console.log("获取视频链接成功", data.attachments[i]);
           } catch (e) {
             data.attachments[i].remoteUrl = "";
             data.attachments[i].error = e;
@@ -171,7 +186,8 @@ export class Interceptor {
         if (attachment.category === "video") {
           if (attachment.remoteUrl) {
             hasVideo = true;
-            content += `<div class="video-div" data-id="${attachment.id}" id="video_${attachment.id}_${new Date().getTime()}" key-path="${attachment.keyPath}" data-url="${attachment.remoteUrl}"></div><div data-id="${attachment.id}" id="video_${attachment.id}_${new Date().getTime()}" class="video-div-btn" key-path="${attachment.keyPath}" data-url="${attachment.remoteUrl}"></div>`;
+
+            content += `<p><video src="${attachment.remoteUrl}" data-id="${attachment.id}"></video></p>`;
           } else {
             console.log("视频链接为空", attachment);
             content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
@@ -183,7 +199,6 @@ export class Interceptor {
       });
       content = `<html><head></head><body>${content}</body></html>`;
     }
-    console.log(content);
     data.content = content;
     return data;
   }
@@ -202,6 +217,16 @@ export class Interceptor {
    */
   private static async getAttment(pid: number, aid: number) {
     const url = `/api/attachment`;
+
+    var headers = {};
+    if (VUE.$cookies) {
+      const uid = VUE.$cookies.get("uid");
+      const token = VUE.$cookies.get("token");
+      headers = {
+        "X-User-Id": uid,
+        "X-User-Token": token,
+      };
+    }
     const data = {
       id: aid,
       resource_id: pid,
@@ -209,6 +234,8 @@ export class Interceptor {
       line: "",
     };
 
-    return AXIOS.post(url, data);
+    return AXIOS.post(url, data, {
+      headers: headers,
+    });
   }
 }
