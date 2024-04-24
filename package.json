@@ -1,6 +1,12 @@
 {
   "name": "haijiao-vip",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "解锁海角VIP帖子,并去除网站广告, TG讨论群:@svip_hj",
+  "repository": "https://github.com/sex4096/haijiao_vip.git",
+  "author": {
+    "name": "sex4096",
+    "telegram": "@svip_hj"
+  },
   "scripts": {
     "dev": "rollup --config --environment BUILD:development --watch",
     "build": "tsc && rollup --config",
