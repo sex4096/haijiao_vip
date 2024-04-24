@@ -1,4 +1,4 @@
-# 海角社区(haijiao.com)解锁VIP,去广告脚本
+# 海角社区(haijiao.com) - 解锁VIP,去广告脚本
 
 该脚本完全免费并开源,遵守MIT协议.
 
