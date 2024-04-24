@@ -2,5 +2,6 @@
   "@name": "haijiao-vip: 解锁海角社区VIP帖子,去广告",
   "@run-at": "document-idle",
   "@match": ["https://www.haijiao.com/*", "https://haijiao.com/*"],
-  "@license": "MIT"
+  "@license": "MIT",
+  "@include": []
 }
