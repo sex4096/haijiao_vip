@@ -2,13 +2,13 @@
 // ==UserScript==
 // @name           haijiao-vip: 解锁海角社区VIP帖子,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        0.0.6
+// @version        0.0.7
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
 // @supportURL     https://github.com/sex4096/haijiao_vip/issue
-// @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/dev/haijiao.js
-// @downloadURL    https://raw.githubusercontent.com/sex4096/haijiao_vip/dev/haijiao.js
+// @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
+// @downloadURL    https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
 // @run-at         document-idle
 // @match          https://www.haijiao.com/*
 // @match          https://haijiao.com/*
