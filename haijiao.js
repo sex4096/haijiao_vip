@@ -108,8 +108,6 @@
      * @returns
      */
     async requestInterceptor(request) {
-      // 查看request的编码
-      console.log("请求拦截器", request);
       return request;
     }
 
@@ -122,7 +120,8 @@
         const origin_response = JSON.parse(JSON.stringify(response.data.data));
         var enc_data = response.data.data.data;
         if (enc_data && typeof enc_data === "string" && enc_data.length > 0) {
-          enc_data = JSON.parse(window.atob(window.atob(window.atob(enc_data))));
+          const Base64 = __webpack_require__("e762").a;
+          enc_data = JSON.parse(Base64.decode(Base64.decode(Base64.decode(enc_data))));
         }
         response = {
           item: enc_data,
@@ -153,7 +152,8 @@
       if (response.mobile === true) {
         var dec = response.item;
         if (response.origin_response.isEncrypted === true) {
-          dec = window.btoa(window.btoa(window.btoa(JSON.stringify(response.item))));
+          const Base64 = __webpack_require__("e762").a;
+          dec = Base64.encode(Base64.encode(Base64.encode(JSON.stringify(response.item))));
         }
         return {
           data: {
@@ -228,7 +228,7 @@
               content += `<p><video src="${attachment.remoteUrl}" data-id="${attachment.id}"></video></p>`;
             } else {
               console.log("视频链接为空", attachment);
-              // content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
+              content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
             }
           }
           if (hasVideo === true) {
