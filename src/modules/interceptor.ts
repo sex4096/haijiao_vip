@@ -1,4 +1,4 @@
-import { AXIOS, VUE } from "./webpack";
+import { AXIOS, VUE, __webpack_require__ } from "./webpack";
 
 /**
  * 自定义拦截器
@@ -61,7 +61,10 @@ export class Interceptor {
       const origin_response = JSON.parse(JSON.stringify(response.data.data));
       var enc_data = response.data.data.data;
       if (enc_data && typeof enc_data === "string" && enc_data.length > 0) {
-        enc_data = JSON.parse(window.atob(window.atob(window.atob(enc_data))));
+        const Base64 = __webpack_require__("e762").a;
+        enc_data = JSON.parse(
+          Base64.decode(Base64.decode(Base64.decode(enc_data)))
+        );
       }
       response = {
         item: enc_data,
@@ -92,8 +95,9 @@ export class Interceptor {
     if (response.mobile === true) {
       var dec = response.item;
       if (response.origin_response.isEncrypted === true) {
-        dec = window.btoa(
-          window.btoa(window.btoa(JSON.stringify(response.item)))
+        const Base64 = __webpack_require__("e762").a;
+        dec = Base64.encode(
+          Base64.encode(Base64.encode(JSON.stringify(response.item)))
         );
       }
 
@@ -236,7 +240,16 @@ export class Interceptor {
       ? response.data
       : response;
     var videoData = responseData.data;
-    if (videoData && typeof videoData === "string" && videoData.length > 0) {
+
+    if (responseData.success === false) {
+      throw new Error(responseData.message);
+    }
+    if (
+      videoData &&
+      typeof videoData === "string" &&
+      videoData.length > 0 &&
+      responseData.isEncrypted === true
+    ) {
       videoData = JSON.parse(window.atob(window.atob(window.atob(videoData))));
     }
 

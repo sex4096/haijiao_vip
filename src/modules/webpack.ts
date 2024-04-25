@@ -1,4 +1,4 @@
-var __webpack_require__: any = undefined;
+export var __webpack_require__: any = undefined;
 export var VUE: any = undefined;
 export var STORE: any = undefined;
 export var AXIOS: any = undefined;

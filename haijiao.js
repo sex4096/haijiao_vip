@@ -108,6 +108,8 @@
      * @returns
      */
     async requestInterceptor(request) {
+      // 查看request的编码
+      console.log("请求拦截器", request);
       return request;
     }
 
@@ -226,7 +228,7 @@
               content += `<p><video src="${attachment.remoteUrl}" data-id="${attachment.id}"></video></p>`;
             } else {
               console.log("视频链接为空", attachment);
-              content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
+              // content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
             }
           }
           if (hasVideo === true) {
@@ -273,7 +275,10 @@
       });
       const responseData = response.data.hasOwnProperty("data") ? response.data : response;
       var videoData = responseData.data;
-      if (videoData && typeof videoData === "string" && videoData.length > 0) {
+      if (responseData.success === false) {
+        throw new Error(responseData.message);
+      }
+      if (videoData && typeof videoData === "string" && videoData.length > 0 && responseData.isEncrypted === true) {
         videoData = JSON.parse(window.atob(window.atob(window.atob(videoData))));
       }
       return videoData;
