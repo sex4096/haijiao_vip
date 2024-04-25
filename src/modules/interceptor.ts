@@ -123,7 +123,14 @@ export class Interceptor {
     response.item = item;
     return response;
   }
+  /**
+   * 修复帖子内容
+   * @param {*} data
+   * @returns
+   */
   private static async fixTopic(data: any, mobile: boolean = false) {
+    console.log("修复帖子内容", data);
+
     if (data.node?.vipLimit > 0) {
       data.node.vipLimit = 0;
     }
@@ -147,6 +154,7 @@ export class Interceptor {
               data.topicId,
               data.attachments[i].id
             );
+            console.log("返回的数据:", response);
 
             var videoData = response.data.hasOwnProperty("data")
               ? response.data.data
