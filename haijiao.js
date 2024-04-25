@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 解锁海角社区VIP帖子,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        0.0.7
+// @version        0.0.8
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -62,6 +62,15 @@
   }
 
   /**
+   * 加载模块
+   * @param module
+   */
+  function getModule(module) {
+    if (!__webpack_require__) return null;
+    return __webpack_require__(module);
+  }
+
+  /**
    * 自定义拦截器
    */
   class Interceptor {
@@ -108,6 +117,14 @@
      * @returns
      */
     async requestInterceptor(request) {
+      // if (
+      //   /topic\/\d+/g.test(request.url) ||
+      //   /\/api\/attachment/g.test(request.url)
+      // ) {
+      //   console.log("转发请求", request.url);
+      //   request.url = `http://127.0.0.1:8000` + request.url;
+      // }
+
       return request;
     }
 
@@ -120,7 +137,7 @@
         const origin_response = JSON.parse(JSON.stringify(response.data.data));
         var enc_data = response.data.data.data;
         if (enc_data && typeof enc_data === "string" && enc_data.length > 0) {
-          const Base64 = __webpack_require__("e762").a;
+          const Base64 = getModule("e762").a;
           enc_data = JSON.parse(Base64.decode(Base64.decode(Base64.decode(enc_data))));
         }
         response = {
@@ -152,7 +169,7 @@
       if (response.mobile === true) {
         var dec = response.item;
         if (response.origin_response.isEncrypted === true) {
-          const Base64 = __webpack_require__("e762").a;
+          const Base64 = getModule("e762").a;
           dec = Base64.encode(Base64.encode(Base64.encode(JSON.stringify(response.item))));
         }
         return {
@@ -197,20 +214,28 @@
         content = content.replace(/此处内容售价\d+金币.*请购买后查看./g, "");
         content = content.replace(/\[sell.*\/sell]/g, "");
         // 首先针对没有获取到链接的视频进行一次处理
-        for (var i = 0; i < data.attachments.length; i++) {
-          if (data.attachments[i].category === "video" && !data.attachments[i].remoteUrl) {
-            console.log("获取视频链接", data.attachments[i]);
-            try {
-              const item = await Interceptor.getAttment(data.topicId, data.attachments[i].id);
-              console.log("返回的数据:", item);
-              data.attachments[i] = item;
-              console.log("获取视频链接成功", data.attachments[i]);
-            } catch (e) {
-              data.attachments[i].remoteUrl = "";
-              data.attachments[i].error = e;
-            }
-          }
-        }
+        // for (var i = 0; i < data.attachments.length; i++) {
+        //   if (
+        //     data.attachments[i].category === "video" &&
+        //     !data.attachments[i].remoteUrl
+        //   ) {
+        //     console.log("获取视频链接", data.attachments[i]);
+        //     try {
+        //       const item = await Interceptor.getAttment(
+        //         data.topicId,
+        //         data.attachments[i].id
+        //       );
+        //       console.log("返回的数据:", item);
+
+        //       data.attachments[i] = item;
+        //       console.log("获取视频链接成功", data.attachments[i]);
+        //     } catch (e) {
+        //       data.attachments[i].remoteUrl = "";
+        //       data.attachments[i].error = e;
+        //     }
+        //   }
+        // }
+
         data.attachments?.forEach(attachment => {
           var hasImage,
             hasVideo = false;
@@ -223,13 +248,13 @@
             content = `<p>${content}</p>`;
           }
           if (attachment.category === "video") {
-            if (attachment.remoteUrl) {
-              hasVideo = true;
-              content += `<p><video src="${attachment.remoteUrl}" data-id="${attachment.id}"></video></p>`;
-            } else {
-              console.log("视频链接为空", attachment);
-              content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
-            }
+            // if (attachment.remoteUrl) {
+            hasVideo = true;
+            content += `<p><video src="${attachment.remoteUrl}" data-id="${attachment.id}"></video></p>`;
+            // } else {
+            //   console.log("视频链接为空", attachment);
+            //   content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
+            // }
           }
           if (hasVideo === true) {
             content = `<p>${content}</p>`;
