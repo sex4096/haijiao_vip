@@ -199,13 +199,9 @@
           if (data.attachments[i].category === "video" && !data.attachments[i].remoteUrl) {
             console.log("获取视频链接", data.attachments[i]);
             try {
-              const response = await Interceptor.getAttment(data.topicId, data.attachments[i].id);
-              console.log("返回的数据:", response);
-              var videoData = response.data.hasOwnProperty("data") ? response.data.data : response.data;
-              if (videoData && typeof videoData === "string" && videoData.length > 0) {
-                videoData = JSON.parse(window.atob(window.atob(window.atob(videoData))));
-              }
-              data.attachments[i] = videoData;
+              const item = await Interceptor.getAttment(data.topicId, data.attachments[i].id);
+              console.log("返回的数据:", item);
+              data.attachments[i] = item;
               console.log("获取视频链接成功", data.attachments[i]);
             } catch (e) {
               data.attachments[i].remoteUrl = "";
@@ -272,9 +268,15 @@
         reource_type: "topic",
         line: ""
       };
-      return AXIOS.post(url, data, {
+      const response = await AXIOS.post(url, data, {
         headers: headers
       });
+      const responseData = response.data.hasOwnProperty("data") ? response.data : response;
+      var videoData = responseData.data;
+      if (videoData && typeof videoData === "string" && videoData.length > 0) {
+        videoData = JSON.parse(window.atob(window.atob(window.atob(videoData))));
+      }
+      return videoData;
     }
   }
 
