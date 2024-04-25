@@ -1,4 +1,4 @@
-export var __webpack_require__: any = undefined;
+var __webpack_require__: any = undefined;
 export var VUE: any = undefined;
 export var STORE: any = undefined;
 export var AXIOS: any = undefined;
@@ -54,4 +54,14 @@ function defineObject(module: any, key: string, value: any) {
       enumerable: true,
       get: value,
     });
+}
+
+/**
+ * 加载模块
+ * @param module
+ */
+export function getModule(module: string) {
+  if (!__webpack_require__) return null;
+
+  return __webpack_require__(module);
 }
