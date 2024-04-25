@@ -3,5 +3,10 @@
   "@run-at": "document-idle",
   "@match": ["https://www.haijiao.com/*", "https://haijiao.com/*"],
   "@license": "MIT",
-  "@include": []
+  "@connect": ["cdn.jsdelivr.net"],
+  "@include": [],
+  "@require": [
+    "https://cdn.jsdelivr.net/npm/react@18.3.0/umd/react.production.min.js",
+    "https://cdn.jsdelivr.net/npm/react-dom@18.3.0/umd/react-dom.production.min.js"
+  ]
 }

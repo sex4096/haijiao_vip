@@ -6,10 +6,26 @@
   },
   "extends": [
     "eslint:recommended",
+    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "react-hooks"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect",
+      "pragma": "React"
+    }
+  },
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "parser": "@typescript-eslint/parser",
   "ignorePatterns": [

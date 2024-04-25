@@ -72,12 +72,18 @@ function devConfigs() {
   const outputFileName = "main.dev.user";
   const outputFile = `${outputFileName}.js`;
   return defineConfig({
-    input: { [outputFileName]: "src/main.ts" },
+    input: { [outputFileName]: "src/main.tsx" },
     output: {
       dir: "dist",
       format: "iife",
       sourcemap: "inline",
+      globals: {
+        react: "React",
+        "react-dom": "ReactDOM",
+      },
     },
+    external: ["react", "react-dom"],
+
     watch: {
       exclude: "dist",
     },
@@ -164,11 +170,12 @@ function devConfigs() {
 function prodConfigs() {
   const outputFile = "haijiao.js";
   return defineConfig({
-    input: "src/main.ts",
+    input: "src/main.tsx",
     output: {
       file: outputFile,
       format: "iife",
     },
+    external: ["react", "react-dom"],
     plugins: [
       ...commonConfigs.plugins,
       userScriptHeader({

@@ -7,15 +7,23 @@
 // @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
 // @supportURL     https://github.com/sex4096/haijiao_vip/issue
-// @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
-// @downloadURL    https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
+// @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/ui/haijiao.js
+// @downloadURL    https://raw.githubusercontent.com/sex4096/haijiao_vip/ui/haijiao.js
 // @run-at         document-idle
 // @match          https://www.haijiao.com/*
 // @match          https://haijiao.com/*
 // @license        MIT
+// @connect        cdn.jsdelivr.net
+// @require        https://cdn.jsdelivr.net/npm/react@18.3.0/umd/react.production.min.js
+// @require        https://cdn.jsdelivr.net/npm/react-dom@18.3.0/umd/react-dom.production.min.js
 // ==/UserScript==
-(function () {
+(function (React, ReactDOM) {
   'use strict';
+
+  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+  var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
+  var ReactDOM__default = /*#__PURE__*/_interopDefaultLegacy(ReactDOM);
 
   var __webpack_require__ = undefined;
   var VUE = undefined;
@@ -310,11 +318,26 @@
     }
   }
 
+  function MyButton() {
+    return /*#__PURE__*/React__default["default"].createElement("button", null, "I'm a button");
+  }
+
   function initialed() {
+    initSetting();
     const interceptor = new Interceptor(AXIOS);
     interceptor.initRequestInterceptor();
     interceptor.initResponseInterceptor();
   }
+  function initSetting() {
+    const toolbarContainer = document.querySelector("div.toolbar-container > div.hj-slot");
+    console.log(toolbarContainer);
+    const newContainer = document.createElement("div");
+    newContainer.id = "haijiao-vip-settings-container";
+    toolbarContainer?.appendChild(newContainer);
+    const myButton = /*#__PURE__*/React__default["default"].createElement(MyButton, null);
+    ReactDOM__default["default"].render(myButton, newContainer);
+  }
   initHookWebpack(initialed);
+  //插入React Component
 
-})();
+})(React, ReactDOM);
