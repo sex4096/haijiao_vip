@@ -8,9 +8,12 @@ TG讨论群:`@svip_hj`
 
 ## 功能
 
-- 解锁VIP板块帖子
 - 去广告
+- 屏蔽全局置顶贴
+- 解锁VIP板块帖子
 - 手机版适配
+
+![setting1](snapshot/settings3.jpg)
 
 ## 待开发功能
 
@@ -68,3 +71,14 @@ VUE.prototype
     VUE.prototype.$loginWindow();
   });
 ```
+
+## 截图
+
+设置界面在这里:
+
+PC端:
+![settings1](snapshot/settings1.jpg)
+
+移动端:
+
+![settings2](snapshot/settings2.jpg)
