@@ -22,5 +22,6 @@ function initSetting() {
     ReactDOM.render(myButton, newContainer);
   }
 }
+GM_addStyle(GM_getResourceText("antd"));
 
 initHookWebpack(initialed);

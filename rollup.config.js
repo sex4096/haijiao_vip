@@ -80,9 +80,11 @@ function devConfigs() {
       globals: {
         react: "React",
         "react-dom": "ReactDOM",
+        antd: "antd",
+        "@ant-design/icons": "icons",
       },
     },
-    external: ["react", "react-dom"],
+    external: ["react", "react-dom", "antd", "@ant-design/icons"],
 
     watch: {
       exclude: "dist",
@@ -174,8 +176,13 @@ function prodConfigs() {
     output: {
       file: outputFile,
       format: "iife",
+      globals: {
+        react: "React",
+        "react-dom": "ReactDOM",
+        antd: "antd",
+      },
     },
-    external: ["react", "react-dom"],
+    external: ["react", "react-dom", "antd"],
     plugins: [
       ...commonConfigs.plugins,
       userScriptHeader({
