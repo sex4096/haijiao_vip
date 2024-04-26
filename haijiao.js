@@ -2,13 +2,13 @@
 // ==UserScript==
 // @name           haijiao-vip: 解锁海角社区VIP帖子,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        0.0.8
+// @version        0.0.9
 // @author         forgetme8
-// @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj
+// @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj.本插件完全免费,如果你是付费购买,请立刻退款并举报
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
 // @supportURL     https://github.com/sex4096/haijiao_vip/issue
-// @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/ui/haijiao.js
-// @downloadURL    https://raw.githubusercontent.com/sex4096/haijiao_vip/ui/haijiao.js
+// @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
+// @downloadURL    https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
 // @run-at         document-idle
 // @match          https://www.haijiao.com/*
 // @match          https://haijiao.com/*
@@ -16,13 +16,22 @@
 // @connect        cdn.jsdelivr.net
 // @require        https://cdn.jsdelivr.net/npm/react@18.3.0/umd/react.production.min.js
 // @require        https://cdn.jsdelivr.net/npm/react-dom@18.3.0/umd/react-dom.production.min.js
+// @require        https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js
+// @require        https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/antd.min.js
+// @require        https://cdn.jsdelivr.net/npm/@ant-design/icons@5.3.6/dist/index.umd.min.js
+// @resource       antd https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/reset.min.css
+// @grant          GM_addStyle
+// @grant          GM_getResourceText
+// @grant          GM_info
+// @grant          GM_getValue
+// @grant          GM_setValue
 // ==/UserScript==
-(function (React, ReactDOM) {
+(function (React$1, ReactDOM, antd, icons) {
   'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
-  var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
+  var React__default = /*#__PURE__*/_interopDefaultLegacy(React$1);
   var ReactDOM__default = /*#__PURE__*/_interopDefaultLegacy(ReactDOM);
 
   var __webpack_require__ = undefined;
@@ -196,10 +205,17 @@
     async responseInterceptor(response) {
       const url = response.url.toLowerCase();
       var item = response.item;
-      if (/topic\/\d+/g.test(url)) {
+      console.log("拦截器返回数据", url, item);
+      if (/topic\/\d+/g.test(url) && GM_getValue("unlockVip", true) === true) {
         item = await Interceptor.fixTopic(item, response.mobile);
-      } else if (/banner\/banner_list/g.test(url)) {
+      }
+      // 去广告
+      else if (/banner\/banner_list/g.test(url) && GM_getValue("removeAds", true) === true) {
         item = await Interceptor.fixAds(item);
+      }
+      // 屏蔽置顶帖
+      else if (/^\/api\/topic\/global\/topics/g.test(url) && GM_getValue("removeTops", true) === true) {
+        item = await Interceptor.fixTops(item);
       }
       response.item = item;
       return response;
@@ -281,6 +297,10 @@
     static async fixAds(data) {
       return null;
     }
+    static async fixTops(data) {
+      return [];
+    }
+
     /**
      * 获取帖子附件
      * @param pid
@@ -318,9 +338,124 @@
     }
   }
 
-  function MyButton() {
-    return /*#__PURE__*/React__default["default"].createElement("button", null, "I'm a button");
-  }
+  const Settings = _ref => {
+    let {
+      initialSettings,
+      onFormInstanceReady
+    } = _ref;
+    const [form] = antd.Form.useForm();
+    React$1.useEffect(() => {
+      onFormInstanceReady(form);
+    }, []);
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(antd.Form, {
+      form: form,
+      name: "settings",
+      labelAlign: "right",
+      labelCol: {
+        span: 8
+      },
+      wrapperCol: {
+        span: 16
+      },
+      initialValues: initialSettings
+    }, /*#__PURE__*/React.createElement(antd.Form.Item, {
+      label: "\u53BB\u5E7F\u544A"
+    }, /*#__PURE__*/React.createElement(antd.Form.Item, {
+      name: "removeAds",
+      noStyle: true
+    }, /*#__PURE__*/React.createElement(antd.Switch, {
+      defaultChecked: true
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 10
+      }
+    }, "\u53BB\u9664\u7F51\u7AD9\u5E7F\u544A")), /*#__PURE__*/React.createElement(antd.Form.Item, {
+      label: "\u5C4F\u853D\u7F6E\u9876"
+    }, /*#__PURE__*/React.createElement(antd.Form.Item, {
+      name: "removeTops",
+      noStyle: true
+    }, /*#__PURE__*/React.createElement(antd.Switch, {
+      defaultChecked: true
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 10
+      }
+    }, "\u5C4F\u853D\u5168\u5C40\u7F6E\u9876\u5E16")), /*#__PURE__*/React.createElement(antd.Form.Item, {
+      label: "\u89E3\u9501VIP"
+    }, /*#__PURE__*/React.createElement(antd.Form.Item, {
+      name: "unlockVip",
+      noStyle: true
+    }, /*#__PURE__*/React.createElement(antd.Switch, {
+      defaultChecked: true
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 10
+      }
+    }, "\u53EF\u89C2\u770Bvip\u533A\u7684\u5E16\u5B50\u53CA\u89C6\u9891")), /*#__PURE__*/React.createElement(antd.Form.Item, {
+      label: "\u89E3\u9501\u6536\u8D39\u89C6\u9891"
+    }, /*#__PURE__*/React.createElement(antd.Form.Item, {
+      name: "unlockBuy",
+      noStyle: true
+    }, /*#__PURE__*/React.createElement(antd.Switch, {
+      defaultChecked: false,
+      disabled: true
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 10
+      }
+    }, "\u53EF\u89C2\u770B\u9700\u8981\u8D2D\u4E70\u7684\u89C6\u9891(\u5F00\u53D1\u4E2D)"))));
+  };
+
+  const App = () => {
+    const [isModalOpen, setIsModalOpen] = React$1.useState(false);
+    const [formInstance, setFormInstance] = React$1.useState();
+    const showModal = () => {
+      setIsModalOpen(true);
+    };
+    const handleOk = async () => {
+      const values = await formInstance?.validateFields();
+      onCreate(values);
+      setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
+    const onCreate = values => {
+      console.log(values);
+      GM_setValue("removeAds", values.removeAds);
+      GM_setValue("removeTops", values.removeTops);
+      GM_setValue("unlockVip", values.unlockVip);
+      GM_setValue("unlockBuy", values.unlockBuy);
+    };
+    return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(antd.FloatButton, {
+      type: "primary",
+      tooltip: "\u6D77\u89D2VIP\u8BBE\u7F6E",
+      style: {
+        right: 16
+      },
+      icon: /*#__PURE__*/React__default["default"].createElement(icons.SettingOutlined, null),
+      onClick: showModal
+    }), /*#__PURE__*/React__default["default"].createElement(antd.Modal, {
+      title: "\u8BBE\u7F6E",
+      open: isModalOpen,
+      onOk: handleOk,
+      onCancel: handleCancel,
+      destroyOnClose: true,
+      okButtonProps: {
+        autoFocus: true
+      }
+    }, /*#__PURE__*/React__default["default"].createElement(Settings, {
+      initialSettings: {
+        removeAds: GM_getValue("removeAds", true),
+        removeTops: GM_getValue("removeTops", true),
+        unlockVip: GM_getValue("unlockVip", true),
+        unlockBuy: GM_getValue("unlockBuy", false)
+      },
+      onFormInstanceReady: instance => {
+        setFormInstance(instance);
+      }
+    })));
+  };
 
   function initialed() {
     initSetting();
@@ -329,15 +464,13 @@
     interceptor.initResponseInterceptor();
   }
   function initSetting() {
-    const toolbarContainer = document.querySelector("div.toolbar-container > div.hj-slot");
-    console.log(toolbarContainer);
-    const newContainer = document.createElement("div");
-    newContainer.id = "haijiao-vip-settings-container";
-    toolbarContainer?.appendChild(newContainer);
-    const myButton = /*#__PURE__*/React__default["default"].createElement(MyButton, null);
-    ReactDOM__default["default"].render(myButton, newContainer);
+    const myButton = /*#__PURE__*/React__default["default"].createElement(App, null);
+    const pluginDiv = document.createElement("div");
+    pluginDiv.id = "haijiao-vip-plugin";
+    document.body.appendChild(pluginDiv);
+    ReactDOM__default["default"].render(myButton, pluginDiv);
   }
+  GM_addStyle(GM_getResourceText("antd"));
   initHookWebpack(initialed);
-  //插入React Component
 
-})(React, ReactDOM);
+})(React, ReactDOM, antd, icons);
