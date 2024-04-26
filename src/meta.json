@@ -15,5 +15,11 @@
   "@resource": [
     "antd https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/reset.min.css"
   ],
-  "@grant": ["GM_addStyle", "GM_getResourceText"]
+  "@grant": [
+    "GM_addStyle",
+    "GM_getResourceText",
+    "GM_info",
+    "GM_getValue",
+    "GM_setValue"
+  ]
 }

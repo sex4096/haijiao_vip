@@ -126,12 +126,17 @@ export class Interceptor {
   private async responseInterceptor(response: any) {
     const url = response.url.toLowerCase();
     var item = response.item;
+    console.log("拦截器返回数据", url, item);
 
-    if (/topic\/\d+/g.test(url)) {
+    if (/topic\/\d+/g.test(url) && GM_getValue("unlockVip", true) === true) {
       item = await Interceptor.fixTopic(item, response.mobile);
-    } else if (/banner\/banner_list/g.test(url)) {
+    } else if (
+      /banner\/banner_list/g.test(url) &&
+      GM_getValue("removeAds", true) === true
+    ) {
       item = await Interceptor.fixAds(item);
     }
+
     response.item = item;
     return response;
   }
@@ -217,6 +222,7 @@ export class Interceptor {
   private static async fixAds(data: any) {
     return null;
   }
+
   /**
    * 获取帖子附件
    * @param pid

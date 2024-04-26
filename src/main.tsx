@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Interceptor } from "./modules/interceptor";
 import { AXIOS, initHookWebpack } from "./modules/webpack";
-import MyButton from "./test";
+import App from "./ui/app";
 
 function initialed() {
   initSetting();
@@ -12,15 +12,11 @@ function initialed() {
 }
 
 function initSetting() {
-  const toolbarContainer = document.querySelector("div[id=toolbar-container]");
-  if (toolbarContainer) {
-    const newContainer = document.createElement("div");
-    newContainer.id = "haijiao-vip-settings-container";
-    toolbarContainer?.appendChild(newContainer);
-
-    const myButton = React.createElement(MyButton, null);
-    ReactDOM.render(myButton, newContainer);
-  }
+  const myButton = React.createElement(App, null);
+  const pluginDiv = document.createElement("div");
+  pluginDiv.id = "haijiao-vip-plugin";
+  document.body.appendChild(pluginDiv);
+  ReactDOM.render(myButton, pluginDiv);
 }
 GM_addStyle(GM_getResourceText("antd"));
 

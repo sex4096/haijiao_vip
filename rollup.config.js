@@ -82,9 +82,10 @@ function devConfigs() {
         "react-dom": "ReactDOM",
         antd: "antd",
         "@ant-design/icons": "icons",
+        dayjs: "dayjs",
       },
     },
-    external: ["react", "react-dom", "antd", "@ant-design/icons"],
+    external: ["react", "react-dom", "dayjs", "antd", "@ant-design/icons"],
 
     watch: {
       exclude: "dist",
@@ -180,9 +181,11 @@ function prodConfigs() {
         react: "React",
         "react-dom": "ReactDOM",
         antd: "antd",
+        "@ant-design/icons": "icons",
+        dayjs: "dayjs",
       },
     },
-    external: ["react", "react-dom", "antd"],
+    external: ["react", "react-dom", "dayjs", "antd", "@ant-design/icons"],
     plugins: [
       ...commonConfigs.plugins,
       userScriptHeader({
