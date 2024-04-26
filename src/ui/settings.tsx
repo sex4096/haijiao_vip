@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 interface SettingsValues {
   removeAds?: boolean;
+  removeTops: boolean;
   unlockVip?: boolean;
   unlockBuy?: boolean;
 }
@@ -31,11 +32,18 @@ const Settings: React.FC<SettingsProps> = ({
         wrapperCol={{ span: 16 }}
         initialValues={initialSettings}
       >
-        <Form.Item<SettingsValues> label="去除广告">
+        <Form.Item<SettingsValues> label="去广告">
           <Form.Item name="removeAds" noStyle>
             <Switch defaultChecked />
           </Form.Item>
-          <span style={{ marginLeft: 10 }}>去除网站烦人的广告</span>
+          <span style={{ marginLeft: 10 }}>去除网站广告</span>
+        </Form.Item>
+
+        <Form.Item<SettingsValues> label="屏蔽置顶">
+          <Form.Item name="removeTops" noStyle>
+            <Switch defaultChecked />
+          </Form.Item>
+          <span style={{ marginLeft: 10 }}>屏蔽全局置顶帖</span>
         </Form.Item>
 
         <Form.Item<SettingsValues> label="解锁VIP">

@@ -23,6 +23,7 @@ const App: React.FC = () => {
   const onCreate = (values: any) => {
     console.log(values);
     GM_setValue("removeAds", values.removeAds);
+    GM_setValue("removeTops", values.removeTops);
     GM_setValue("unlockVip", values.unlockVip);
     GM_setValue("unlockBuy", values.unlockBuy);
   };
@@ -48,6 +49,7 @@ const App: React.FC = () => {
         <Settings
           initialSettings={{
             removeAds: GM_getValue("removeAds", true),
+            removeTops: GM_getValue("removeTops", true),
             unlockVip: GM_getValue("unlockVip", true),
             unlockBuy: GM_getValue("unlockBuy", false),
           }}

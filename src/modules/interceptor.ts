@@ -130,11 +130,20 @@ export class Interceptor {
 
     if (/topic\/\d+/g.test(url) && GM_getValue("unlockVip", true) === true) {
       item = await Interceptor.fixTopic(item, response.mobile);
-    } else if (
+    }
+    // 去广告
+    else if (
       /banner\/banner_list/g.test(url) &&
       GM_getValue("removeAds", true) === true
     ) {
       item = await Interceptor.fixAds(item);
+    }
+    // 屏蔽置顶帖
+    else if (
+      /^\/api\/topic\/global\/topics/g.test(url) &&
+      GM_getValue("removeTops", true) === true
+    ) {
+      item = await Interceptor.fixTops(item);
     }
 
     response.item = item;
@@ -221,6 +230,10 @@ export class Interceptor {
    */
   private static async fixAds(data: any) {
     return null;
+  }
+
+  private static async fixTops(data: any) {
+    return [];
   }
 
   /**
