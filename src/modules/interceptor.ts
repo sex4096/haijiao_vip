@@ -1,3 +1,4 @@
+import { PluginStore } from "./plugin_store";
 import { AXIOS, VUE, getModule } from "./webpack";
 
 /**
@@ -128,20 +129,23 @@ export class Interceptor {
     var item = response.item;
     console.log("拦截器返回数据", url, item);
 
-    if (/topic\/\d+/g.test(url) && GM_getValue("unlockVip", true) === true) {
+    if (
+      /topic\/\d+/g.test(url) &&
+      PluginStore.get("removeAds", true) === true
+    ) {
       item = await Interceptor.fixTopic(item, response.mobile);
     }
     // 去广告
     else if (
       /banner\/banner_list/g.test(url) &&
-      GM_getValue("removeAds", true) === true
+      PluginStore.get("removeAds", true) === true
     ) {
       item = await Interceptor.fixAds(item);
     }
     // 屏蔽置顶帖
     else if (
       /^\/api\/topic\/global\/topics/g.test(url) &&
-      GM_getValue("removeTops", true) === true
+      PluginStore.get("removeTops", true) === true
     ) {
       item = await Interceptor.fixTops(item);
     }

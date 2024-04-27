@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Interceptor } from "./modules/interceptor";
 import { AXIOS, initHookWebpack } from "./modules/webpack";
 import App from "./ui/app";
+import { Interceptor } from "./modules/interceptor";
 
 function initialed() {
-  initSetting();
   const interceptor = new Interceptor(AXIOS);
   interceptor.initRequestInterceptor();
   interceptor.initResponseInterceptor();
@@ -18,6 +17,14 @@ function initSetting() {
   document.body.appendChild(pluginDiv);
   ReactDOM.render(myButton, pluginDiv);
 }
-GM_addStyle(GM_getResourceText("antd"));
 
+function addStyle() {
+  let script = document.createElement("link");
+  script.setAttribute("rel", "stylesheet");
+  script.setAttribute("type", "text/css");
+  script.href = "https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/reset.min.css";
+  document.documentElement.appendChild(script);
+}
+addStyle();
+initSetting();
 initHookWebpack(initialed);

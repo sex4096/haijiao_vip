@@ -11,15 +11,5 @@
     "https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js",
     "https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/antd.min.js",
     "https://cdn.jsdelivr.net/npm/@ant-design/icons@5.3.6/dist/index.umd.min.js"
-  ],
-  "@resource": [
-    "antd https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/reset.min.css"
-  ],
-  "@grant": [
-    "GM_addStyle",
-    "GM_getResourceText",
-    "GM_info",
-    "GM_getValue",
-    "GM_setValue"
   ]
 }

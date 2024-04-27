@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FloatButton, FormInstance, Modal } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import Settings from "./settings";
+import { PluginStore } from "../modules/plugin_store";
+
 const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formInstance, setFormInstance] = useState<FormInstance>();
@@ -21,11 +23,10 @@ const App: React.FC = () => {
   };
 
   const onCreate = (values: any) => {
-    console.log(values);
-    GM_setValue("removeAds", values.removeAds);
-    GM_setValue("removeTops", values.removeTops);
-    GM_setValue("unlockVip", values.unlockVip);
-    GM_setValue("unlockBuy", values.unlockBuy);
+    PluginStore.set("removeAds", values.removeAds);
+    PluginStore.set("removeTops", values.removeTops);
+    PluginStore.set("unlockVip", values.unlockVip);
+    PluginStore.set("unlockBuy", values.unlockBuy);
   };
 
   return (
@@ -48,10 +49,10 @@ const App: React.FC = () => {
       >
         <Settings
           initialSettings={{
-            removeAds: GM_getValue("removeAds", true),
-            removeTops: GM_getValue("removeTops", true),
-            unlockVip: GM_getValue("unlockVip", true),
-            unlockBuy: GM_getValue("unlockBuy", false),
+            removeAds: PluginStore.get("removeAds", true),
+            removeTops: PluginStore.get("removeTops", true),
+            unlockVip: PluginStore.get("unlockVip", true),
+            unlockBuy: PluginStore.get("unlockBuy", false),
           }}
           onFormInstanceReady={(instance) => {
             setFormInstance(instance);
