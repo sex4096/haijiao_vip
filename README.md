@@ -43,7 +43,18 @@ TG讨论群:`@svip_hj`
 
 ## 安装
 
+#### PC端:
+
 正常Tampermonkey安装`haijiao.js`即可,~~脚本无任何依赖~~.
+
+#### iOS:
+
+推荐使用Safari浏览器+Stay插件进行安装,在Stay通过链接新建脚本即可:
+`https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js`
+
+#### 安卓:
+
+我没安卓机器不知道,哪位哥们告诉一下~
 
 ## 闲聊
 
