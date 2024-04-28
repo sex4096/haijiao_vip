@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 解锁海角社区VIP帖子,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        0.0.10
+// @version        0.0.11
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj.本插件完全免费,如果你是付费购买,请立刻退款并举报
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -470,6 +470,28 @@
     }
   }
 
+  function addStyle() {
+    let script = document.createElement("link");
+    script.setAttribute("rel", "stylesheet");
+    script.setAttribute("type", "text/css");
+    script.href = "https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/reset.min.css";
+    document.documentElement.appendChild(script);
+  }
+  function addAnalytics() {
+    const script = document.createElement("script");
+    script.src = "https://www.googletagmanager.com/gtag/js?id=G-NQ08DH5N3T";
+    script.async = true;
+    document.head.appendChild(script);
+    const script2 = document.createElement("script");
+    script2.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NQ08DH5N3T');
+    `;
+    document.head.appendChild(script2);
+  }
+
   function initialed() {
     const interceptor = new Interceptor(AXIOS);
     interceptor.initRequestInterceptor();
@@ -482,13 +504,7 @@
     document.body.appendChild(pluginDiv);
     ReactDOM__default["default"].render(myButton, pluginDiv);
   }
-  function addStyle() {
-    let script = document.createElement("link");
-    script.setAttribute("rel", "stylesheet");
-    script.setAttribute("type", "text/css");
-    script.href = "https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/reset.min.css";
-    document.documentElement.appendChild(script);
-  }
+  addAnalytics();
   addStyle();
   initSetting();
   initHookWebpack(initialed);
