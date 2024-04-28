@@ -141,8 +141,8 @@ export class Interceptor {
     console.log("拦截器返回数据", url, item);
 
     if (
-      /topic\/\d+/g.test(url) &&
-      PluginStore.get("removeAds", true) === true
+      /^\/api\/topic\/\d+/g.test(url) &&
+      PluginStore.get("unlockVip", true) === true
     ) {
       item = await this.fixTopic(item);
     }
