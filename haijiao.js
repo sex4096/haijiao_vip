@@ -143,13 +143,19 @@
         marginLeft: 10
       }
     }, "\u53EF\u89C2\u770B\u9700\u8981\u8D2D\u4E70\u7684\u89C6\u9891")), showSetHost && /*#__PURE__*/React.createElement(antd.Form.Item, {
-      label: "\u89E3\u9501\u89C6\u9891\u5730\u5740",
+      label: "\u89E3\u9501\u89C6\u9891\u5730\u5740"
+    }, /*#__PURE__*/React.createElement(antd.Form.Item, {
       name: "unlockBuyHost",
+      noStyle: true,
       rules: [{
         required: true,
         message: "请输入服务器地址"
       }]
-    }, /*#__PURE__*/React.createElement(antd.Input, null))));
+    }, /*#__PURE__*/React.createElement(antd.Input, null)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 5
+      }
+    }, "\u670D\u52A1\u5668\u5730\u5740\u4E0D\u5B9A\u65F6\u66F4\u6362"), /*#__PURE__*/React.createElement("div", null, "\u8BF7\u8BA2\u9605TG\u9891\u9053:@svip_nav\u83B7\u53D6\u6700\u65B0\u5730\u5740"))));
   };
 
   class PluginStore {
@@ -275,12 +281,10 @@
     async requestInterceptor(request) {
       if (PluginStore.get("unlockBuy", false) === true && PluginStore.get("unlockBuyHost", "").length > 0) {
         if (/\/api\/attachment/g.test(request.url) || /topic\/\d+/g.test(request.url)) {
-          console.log("转发请求", request.url);
+          console.log("转发请求", request.url, request);
           var host = PluginStore.get("unlockBuyHost", "");
-          if (host.endsWith("/")) {
-            host = host.substring(0, host.length - 1);
-          }
-          request.url = host + request.url;
+          request.baseURL = host;
+          request.crossDomain = true;
         }
       }
       return request;

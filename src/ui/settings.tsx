@@ -64,12 +64,23 @@ const Settings: React.FC<SettingsProps> = ({
         </Form.Item>
 
         {showSetHost && (
-          <Form.Item
-            label="解锁视频地址"
-            name="unlockBuyHost"
-            rules={[{ required: true, message: "请输入服务器地址" }]}
-          >
-            <Input />
+          <Form.Item label="解锁视频地址">
+            <Form.Item
+              name="unlockBuyHost"
+              noStyle
+              rules={[{ required: true, message: "请输入服务器地址" }]}
+            >
+              <Input />
+            </Form.Item>
+            <div
+              style={{
+                color: "red",
+                marginTop: 5,
+              }}
+            >
+              服务器地址不定时更换
+            </div>
+            <div>请订阅TG频道:@svip_nav获取最新地址</div>
           </Form.Item>
         )}
       </Form>
