@@ -1,5 +1,5 @@
 import { PluginStore } from "./plugin_store";
-import { AXIOS, VUE, getModule } from "./webpack";
+import { getModule } from "./webpack";
 
 /**
  * 自定义拦截器
@@ -15,7 +15,7 @@ export class Interceptor {
    * 初始化请求拦截器
    */
   initRequestInterceptor() {
-    this.axios.interceptors.request.use(this.requestInterceptor);
+    this.axios.interceptors.request.use(this.requestInterceptor.bind(this));
   }
 
   /**
@@ -39,9 +39,13 @@ export class Interceptor {
         return response;
       };
     }
-    this.axios.interceptors.response.use(this.responseDecodeInterceptor);
-    this.axios.interceptors.response.use(this.responseInterceptor);
-    this.axios.interceptors.response.use(this.responseEncodeInterceptor);
+    this.axios.interceptors.response.use(
+      this.responseDecodeInterceptor.bind(this)
+    );
+    this.axios.interceptors.response.use(this.responseInterceptor.bind(this));
+    this.axios.interceptors.response.use(
+      this.responseEncodeInterceptor.bind(this)
+    );
   }
 
   /**
@@ -142,21 +146,21 @@ export class Interceptor {
       /topic\/\d+/g.test(url) &&
       PluginStore.get("removeAds", true) === true
     ) {
-      item = await Interceptor.fixTopic(item, response.mobile);
+      item = await this.fixTopic(item);
     }
     // 去广告
     else if (
       /banner\/banner_list/g.test(url) &&
       PluginStore.get("removeAds", true) === true
     ) {
-      item = await Interceptor.fixAds(item);
+      item = await this.fixAds(item);
     }
     // 屏蔽置顶帖
     else if (
       /^\/api\/topic\/global\/topics/g.test(url) &&
       PluginStore.get("removeTops", true) === true
     ) {
-      item = await Interceptor.fixTops(item);
+      item = await this.fixTops(item);
     }
 
     response.item = item;
@@ -167,7 +171,7 @@ export class Interceptor {
    * @param {*} data
    * @returns
    */
-  private static async fixTopic(data: any, mobile: boolean = false) {
+  private async fixTopic(data: any) {
     console.log("修复帖子内容", data);
 
     if (data.node?.vipLimit > 0) {
@@ -181,28 +185,6 @@ export class Interceptor {
       content = content.replace(/\[图片\]/g, "");
       content = content.replace(/此处内容售价\d+金币.*请购买后查看./g, "");
       content = content.replace(/\[sell.*\/sell]/g, "");
-      // 首先针对没有获取到链接的视频进行一次处理
-      // for (var i = 0; i < data.attachments.length; i++) {
-      //   if (
-      //     data.attachments[i].category === "video" &&
-      //     !data.attachments[i].remoteUrl
-      //   ) {
-      //     console.log("获取视频链接", data.attachments[i]);
-      //     try {
-      //       const item = await Interceptor.getAttment(
-      //         data.topicId,
-      //         data.attachments[i].id
-      //       );
-      //       console.log("返回的数据:", item);
-
-      //       data.attachments[i] = item;
-      //       console.log("获取视频链接成功", data.attachments[i]);
-      //     } catch (e) {
-      //       data.attachments[i].remoteUrl = "";
-      //       data.attachments[i].error = e;
-      //     }
-      //   }
-      // }
 
       data.attachments?.forEach((attachment: any) => {
         var hasImage,
@@ -241,58 +223,11 @@ export class Interceptor {
    * 去广告
    * @param data
    */
-  private static async fixAds(data: any) {
+  private async fixAds(data: any) {
     return null;
   }
 
-  private static async fixTops(data: any) {
+  private async fixTops(data: any) {
     return [];
-  }
-
-  /**
-   * 获取帖子附件
-   * @param pid
-   * @param aid
-   */
-  private static async getAttment(pid: number, aid: number) {
-    const url = `/api/attachment`;
-
-    var headers = {};
-    if (VUE.$cookies) {
-      const uid = VUE.$cookies.get("uid");
-      const token = VUE.$cookies.get("token");
-      headers = {
-        "X-User-Id": uid,
-        "X-User-Token": token,
-      };
-    }
-    const data = {
-      id: aid,
-      resource_id: pid,
-      reource_type: "topic",
-      line: "",
-    };
-
-    const response = await AXIOS.post(url, data, {
-      headers: headers,
-    });
-    const responseData = response.data.hasOwnProperty("data")
-      ? response.data
-      : response;
-    var videoData = responseData.data;
-
-    if (responseData.success === false) {
-      throw new Error(responseData.message);
-    }
-    if (
-      videoData &&
-      typeof videoData === "string" &&
-      videoData.length > 0 &&
-      responseData.isEncrypted === true
-    ) {
-      videoData = JSON.parse(window.atob(window.atob(window.atob(videoData))));
-    }
-
-    return videoData;
   }
 }

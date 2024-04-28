@@ -1,7 +1,7 @@
 var __webpack_require__: any = undefined;
-export var VUE: any = undefined;
-export var STORE: any = undefined;
-export var AXIOS: any = undefined;
+var VUE: any = undefined;
+var STORE: any = undefined;
+var AXIOS: any = undefined;
 export var BASE64: any = undefined;
 var callback: any = undefined;
 export function initHookWebpack(initialed: CallableFunction) {
@@ -32,7 +32,7 @@ function importModules() {
   AXIOS = getObject(AXIOS);
   AXIOS = AXIOS.a;
 
-  callback();
+  callback(VUE, STORE, AXIOS);
 }
 
 function getObject(module: any) {
