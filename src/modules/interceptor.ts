@@ -50,13 +50,22 @@ export class Interceptor {
    * @returns
    */
   private async requestInterceptor(request: any) {
-    // if (
-    //   /topic\/\d+/g.test(request.url) ||
-    //   /\/api\/attachment/g.test(request.url)
-    // ) {
-    //   console.log("转发请求", request.url);
-    //   request.url = `http://127.0.0.1:8000` + request.url;
-    // }
+    if (
+      PluginStore.get("unlockBuy", false) === true &&
+      PluginStore.get("unlockBuyHost", "").length > 0
+    ) {
+      if (
+        /\/api\/attachment/g.test(request.url) ||
+        /topic\/\d+/g.test(request.url)
+      ) {
+        console.log("转发请求", request.url);
+        var host = PluginStore.get("unlockBuyHost", "");
+        if (host.endsWith("/")) {
+          host = host.substring(0, host.length - 1);
+        }
+        request.url = host + request.url;
+      }
+    }
 
     return request;
   }

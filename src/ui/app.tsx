@@ -23,11 +23,15 @@ const App: React.FC = () => {
   };
 
   const onCreate = (values: any) => {
+    console.log("Received values of form: ", values);
+
     PluginStore.set("removeAds", values.removeAds);
     PluginStore.set("removeTops", values.removeTops);
     PluginStore.set("unlockVip", values.unlockVip);
     PluginStore.set("unlockBuy", values.unlockBuy);
-    PluginStore.set("unlockBuyHost", values.unlockBuyHost);
+    if (values.hasOwnProperty("unlockBuyHost")) {
+      PluginStore.set("unlockBuyHost", values.unlockBuyHost);
+    }
   };
 
   return (
