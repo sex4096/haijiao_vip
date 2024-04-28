@@ -7,8 +7,8 @@
 // @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj.本插件完全免费,如果你是付费购买,请立刻退款并举报
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
 // @supportURL     https://github.com/sex4096/haijiao_vip/issue
-// @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
-// @downloadURL    https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
+// @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/dev/haijiao.js
+// @downloadURL    https://raw.githubusercontent.com/sex4096/haijiao_vip/dev/haijiao.js
 // @run-at         document-idle
 // @match          https://www.haijiao.com/*
 // @match          https://haijiao.com/*
@@ -30,6 +30,7 @@
 
   var __webpack_require__ = undefined;
   var VUE = undefined;
+  var STORE = undefined;
   var AXIOS = undefined;
   var callback = undefined;
   function initHookWebpack(initialed) {
@@ -50,11 +51,11 @@
   }
   function importModules() {
     VUE = __webpack_require__("2b0e").default;
-    __webpack_require__("4360").a;
+    STORE = __webpack_require__("4360").a;
     AXIOS = __webpack_require__("bc3a");
     AXIOS = getObject(AXIOS);
     AXIOS = AXIOS.a;
-    callback();
+    callback(VUE, STORE, AXIOS);
   }
   function getObject(module) {
     const t = module && module.__esModule ? function () {
@@ -86,9 +87,11 @@
       initialSettings,
       onFormInstanceReady
     } = _ref;
+    const [showSetHost, setShowSetHost] = React$1.useState(false);
     const [form] = antd.Form.useForm();
     React$1.useEffect(() => {
       onFormInstanceReady(form);
+      setShowSetHost(initialSettings.unlockBuy || false);
     }, []);
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(antd.Form, {
       form: form,
@@ -106,9 +109,7 @@
     }, /*#__PURE__*/React.createElement(antd.Form.Item, {
       name: "removeAds",
       noStyle: true
-    }, /*#__PURE__*/React.createElement(antd.Switch, {
-      defaultChecked: true
-    })), /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement(antd.Switch, null)), /*#__PURE__*/React.createElement("span", {
       style: {
         marginLeft: 10
       }
@@ -117,9 +118,7 @@
     }, /*#__PURE__*/React.createElement(antd.Form.Item, {
       name: "removeTops",
       noStyle: true
-    }, /*#__PURE__*/React.createElement(antd.Switch, {
-      defaultChecked: true
-    })), /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement(antd.Switch, null)), /*#__PURE__*/React.createElement("span", {
       style: {
         marginLeft: 10
       }
@@ -128,9 +127,7 @@
     }, /*#__PURE__*/React.createElement(antd.Form.Item, {
       name: "unlockVip",
       noStyle: true
-    }, /*#__PURE__*/React.createElement(antd.Switch, {
-      defaultChecked: true
-    })), /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement(antd.Switch, null)), /*#__PURE__*/React.createElement("span", {
       style: {
         marginLeft: 10
       }
@@ -140,19 +137,24 @@
       name: "unlockBuy",
       noStyle: true
     }, /*#__PURE__*/React.createElement(antd.Switch, {
-      defaultChecked: false,
-      disabled: true
+      onChange: setShowSetHost
     })), /*#__PURE__*/React.createElement("span", {
       style: {
         marginLeft: 10
       }
-    }, "\u53EF\u89C2\u770B\u9700\u8981\u8D2D\u4E70\u7684\u89C6\u9891(\u5F00\u53D1\u4E2D)"))));
+    }, "\u53EF\u89C2\u770B\u9700\u8981\u8D2D\u4E70\u7684\u89C6\u9891")), showSetHost && /*#__PURE__*/React.createElement(antd.Form.Item, {
+      label: "\u89E3\u9501\u89C6\u9891\u5730\u5740",
+      name: "unlockBuyHost",
+      rules: [{
+        required: true,
+        message: "请输入服务器地址"
+      }]
+    }, /*#__PURE__*/React.createElement(antd.Input, null))));
   };
 
   class PluginStore {
     static get(key, defaultValue) {
       const value = localStorage.getItem(key);
-      console.log("获取", key, value);
       if (value === null) {
         return defaultValue;
       }
@@ -184,10 +186,14 @@
       setIsModalOpen(false);
     };
     const onCreate = values => {
+      console.log("Received values of form: ", values);
       PluginStore.set("removeAds", values.removeAds);
       PluginStore.set("removeTops", values.removeTops);
       PluginStore.set("unlockVip", values.unlockVip);
       PluginStore.set("unlockBuy", values.unlockBuy);
+      if (values.hasOwnProperty("unlockBuyHost")) {
+        PluginStore.set("unlockBuyHost", values.unlockBuyHost);
+      }
     };
     return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(antd.FloatButton, {
       type: "primary",
@@ -211,7 +217,8 @@
         removeAds: PluginStore.get("removeAds", true),
         removeTops: PluginStore.get("removeTops", true),
         unlockVip: PluginStore.get("unlockVip", true),
-        unlockBuy: PluginStore.get("unlockBuy", false)
+        unlockBuy: PluginStore.get("unlockBuy", false),
+        unlockBuyHost: PluginStore.get("unlockBuyHost", "")
       },
       onFormInstanceReady: instance => {
         setFormInstance(instance);
@@ -233,7 +240,7 @@
      * 初始化请求拦截器
      */
     initRequestInterceptor() {
-      this.axios.interceptors.request.use(this.requestInterceptor);
+      this.axios.interceptors.request.use(this.requestInterceptor.bind(this));
     }
 
     /**
@@ -255,9 +262,9 @@
           return response;
         };
       }
-      this.axios.interceptors.response.use(this.responseDecodeInterceptor);
-      this.axios.interceptors.response.use(this.responseInterceptor);
-      this.axios.interceptors.response.use(this.responseEncodeInterceptor);
+      this.axios.interceptors.response.use(this.responseDecodeInterceptor.bind(this));
+      this.axios.interceptors.response.use(this.responseInterceptor.bind(this));
+      this.axios.interceptors.response.use(this.responseEncodeInterceptor.bind(this));
     }
 
     /**
@@ -266,14 +273,16 @@
      * @returns
      */
     async requestInterceptor(request) {
-      // if (
-      //   /topic\/\d+/g.test(request.url) ||
-      //   /\/api\/attachment/g.test(request.url)
-      // ) {
-      //   console.log("转发请求", request.url);
-      //   request.url = `http://127.0.0.1:8000` + request.url;
-      // }
-
+      if (PluginStore.get("unlockBuy", false) === true && PluginStore.get("unlockBuyHost", "").length > 0) {
+        if (/\/api\/attachment/g.test(request.url) || /topic\/\d+/g.test(request.url)) {
+          console.log("转发请求", request.url);
+          var host = PluginStore.get("unlockBuyHost", "");
+          if (host.endsWith("/")) {
+            host = host.substring(0, host.length - 1);
+          }
+          request.url = host + request.url;
+        }
+      }
       return request;
     }
 
@@ -339,15 +348,15 @@
       var item = response.item;
       console.log("拦截器返回数据", url, item);
       if (/topic\/\d+/g.test(url) && PluginStore.get("removeAds", true) === true) {
-        item = await Interceptor.fixTopic(item, response.mobile);
+        item = await this.fixTopic(item);
       }
       // 去广告
       else if (/banner\/banner_list/g.test(url) && PluginStore.get("removeAds", true) === true) {
-        item = await Interceptor.fixAds(item);
+        item = await this.fixAds(item);
       }
       // 屏蔽置顶帖
       else if (/^\/api\/topic\/global\/topics/g.test(url) && PluginStore.get("removeTops", true) === true) {
-        item = await Interceptor.fixTops(item);
+        item = await this.fixTops(item);
       }
       response.item = item;
       return response;
@@ -357,7 +366,7 @@
      * @param {*} data
      * @returns
      */
-    static async fixTopic(data) {
+    async fixTopic(data) {
       console.log("修复帖子内容", data);
       if (data.node?.vipLimit > 0) {
         data.node.vipLimit = 0;
@@ -369,29 +378,6 @@
         content = content.replace(/\[图片\]/g, "");
         content = content.replace(/此处内容售价\d+金币.*请购买后查看./g, "");
         content = content.replace(/\[sell.*\/sell]/g, "");
-        // 首先针对没有获取到链接的视频进行一次处理
-        // for (var i = 0; i < data.attachments.length; i++) {
-        //   if (
-        //     data.attachments[i].category === "video" &&
-        //     !data.attachments[i].remoteUrl
-        //   ) {
-        //     console.log("获取视频链接", data.attachments[i]);
-        //     try {
-        //       const item = await Interceptor.getAttment(
-        //         data.topicId,
-        //         data.attachments[i].id
-        //       );
-        //       console.log("返回的数据:", item);
-
-        //       data.attachments[i] = item;
-        //       console.log("获取视频链接成功", data.attachments[i]);
-        //     } catch (e) {
-        //       data.attachments[i].remoteUrl = "";
-        //       data.attachments[i].error = e;
-        //     }
-        //   }
-        // }
-
         data.attachments?.forEach(attachment => {
           var hasImage,
             hasVideo = false;
@@ -426,47 +412,11 @@
      * 去广告
      * @param data
      */
-    static async fixAds(data) {
+    async fixAds(data) {
       return null;
     }
-    static async fixTops(data) {
+    async fixTops(data) {
       return [];
-    }
-
-    /**
-     * 获取帖子附件
-     * @param pid
-     * @param aid
-     */
-    static async getAttment(pid, aid) {
-      const url = `/api/attachment`;
-      var headers = {};
-      if (VUE.$cookies) {
-        const uid = VUE.$cookies.get("uid");
-        const token = VUE.$cookies.get("token");
-        headers = {
-          "X-User-Id": uid,
-          "X-User-Token": token
-        };
-      }
-      const data = {
-        id: aid,
-        resource_id: pid,
-        reource_type: "topic",
-        line: ""
-      };
-      const response = await AXIOS.post(url, data, {
-        headers: headers
-      });
-      const responseData = response.data.hasOwnProperty("data") ? response.data : response;
-      var videoData = responseData.data;
-      if (responseData.success === false) {
-        throw new Error(responseData.message);
-      }
-      if (videoData && typeof videoData === "string" && videoData.length > 0 && responseData.isEncrypted === true) {
-        videoData = JSON.parse(window.atob(window.atob(window.atob(videoData))));
-      }
-      return videoData;
     }
   }
 
@@ -492,8 +442,8 @@
     document.head.appendChild(script2);
   }
 
-  function initialed() {
-    const interceptor = new Interceptor(AXIOS);
+  function initialed(vue, store, axios) {
+    const interceptor = new Interceptor(axios);
     interceptor.initRequestInterceptor();
     interceptor.initResponseInterceptor();
   }

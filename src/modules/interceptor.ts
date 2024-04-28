@@ -62,12 +62,10 @@ export class Interceptor {
         /\/api\/attachment/g.test(request.url) ||
         /topic\/\d+/g.test(request.url)
       ) {
-        console.log("转发请求", request.url);
+        console.log("转发请求", request.url, request);
         var host = PluginStore.get("unlockBuyHost", "");
-        if (host.endsWith("/")) {
-          host = host.substring(0, host.length - 1);
-        }
-        request.url = host + request.url;
+        request.baseURL = host;
+        request.crossDomain = true;
       }
     }
 
