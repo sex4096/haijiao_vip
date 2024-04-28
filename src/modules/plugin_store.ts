@@ -1,7 +1,6 @@
 export class PluginStore {
   static get(key: string, defaultValue: string | number | boolean): any {
     const value = localStorage.getItem(key);
-    console.log("获取", key, value);
 
     if (value === null) {
       return defaultValue;
