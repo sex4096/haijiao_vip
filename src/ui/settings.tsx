@@ -1,4 +1,4 @@
-import { DescriptionsProps, Form, FormInstance, Modal, Switch } from "antd";
+import { Form, FormInstance, Input, Switch } from "antd";
 import { useEffect, useState } from "react";
 
 interface SettingsValues {
@@ -6,6 +6,7 @@ interface SettingsValues {
   removeTops: boolean;
   unlockVip?: boolean;
   unlockBuy?: boolean;
+  unlockBuyHost?: string;
 }
 
 interface SettingsProps {
@@ -17,9 +18,11 @@ const Settings: React.FC<SettingsProps> = ({
   initialSettings,
   onFormInstanceReady,
 }) => {
+  const [showSetHost, setShowSetHost] = useState(false);
   const [form] = Form.useForm();
   useEffect(() => {
     onFormInstanceReady(form);
+    setShowSetHost(initialSettings.unlockBuy || false);
   }, []);
 
   return (
@@ -34,31 +37,41 @@ const Settings: React.FC<SettingsProps> = ({
       >
         <Form.Item<SettingsValues> label="去广告">
           <Form.Item name="removeAds" noStyle>
-            <Switch defaultChecked />
+            <Switch />
           </Form.Item>
           <span style={{ marginLeft: 10 }}>去除网站广告</span>
         </Form.Item>
 
         <Form.Item<SettingsValues> label="屏蔽置顶">
           <Form.Item name="removeTops" noStyle>
-            <Switch defaultChecked />
+            <Switch />
           </Form.Item>
           <span style={{ marginLeft: 10 }}>屏蔽全局置顶帖</span>
         </Form.Item>
 
         <Form.Item<SettingsValues> label="解锁VIP">
           <Form.Item name="unlockVip" noStyle>
-            <Switch defaultChecked />
+            <Switch />
           </Form.Item>
           <span style={{ marginLeft: 10 }}>可观看vip区的帖子及视频</span>
         </Form.Item>
 
         <Form.Item<SettingsValues> label="解锁收费视频">
           <Form.Item name="unlockBuy" noStyle>
-            <Switch defaultChecked={false} disabled={true} />
+            <Switch onChange={setShowSetHost} />
           </Form.Item>
-          <span style={{ marginLeft: 10 }}>可观看需要购买的视频(开发中)</span>
+          <span style={{ marginLeft: 10 }}>可观看需要购买的视频</span>
         </Form.Item>
+
+        {showSetHost && (
+          <Form.Item
+            label="解锁视频地址"
+            name="unlockBuyHost"
+            rules={[{ required: true, message: "请输入服务器地址" }]}
+          >
+            <Input />
+          </Form.Item>
+        )}
       </Form>
     </>
   );

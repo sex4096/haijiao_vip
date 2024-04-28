@@ -27,6 +27,7 @@ const App: React.FC = () => {
     PluginStore.set("removeTops", values.removeTops);
     PluginStore.set("unlockVip", values.unlockVip);
     PluginStore.set("unlockBuy", values.unlockBuy);
+    PluginStore.set("unlockBuyHost", values.unlockBuyHost);
   };
 
   return (
@@ -53,6 +54,7 @@ const App: React.FC = () => {
             removeTops: PluginStore.get("removeTops", true),
             unlockVip: PluginStore.get("unlockVip", true),
             unlockBuy: PluginStore.get("unlockBuy", false),
+            unlockBuyHost: PluginStore.get("unlockBuyHost", ""),
           }}
           onFormInstanceReady={(instance) => {
             setFormInstance(instance);
