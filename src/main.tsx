@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { AXIOS, initHookWebpack } from "./modules/webpack";
 import App from "./ui/app";
 import { Interceptor } from "./modules/interceptor";
+import { addAnalytics, addStyle } from "./modules/util";
 
 function initialed() {
   const interceptor = new Interceptor(AXIOS);
@@ -18,13 +19,7 @@ function initSetting() {
   ReactDOM.render(myButton, pluginDiv);
 }
 
-function addStyle() {
-  let script = document.createElement("link");
-  script.setAttribute("rel", "stylesheet");
-  script.setAttribute("type", "text/css");
-  script.href = "https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/reset.min.css";
-  document.documentElement.appendChild(script);
-}
+addAnalytics();
 addStyle();
 initSetting();
 initHookWebpack(initialed);
