@@ -3,6 +3,7 @@ import { FloatButton, FormInstance, Modal } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import Settings from "./settings";
 import { PluginStore } from "../modules/plugin_store";
+import ReactDOM from "react-dom";
 
 const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -31,7 +31,6 @@ function importModules() {
   AXIOS = __webpack_require__("bc3a");
   AXIOS = getObject(AXIOS);
   AXIOS = AXIOS.a;
-
   callback(VUE, STORE, AXIOS);
 }
 
