@@ -4,9 +4,9 @@
 
 开源代码托管在: [haijiao_vip](https://github.com/sex4096/haijiao_vip/)
 
-TG讨论群:`@svip_hj`
+TG讨论群:[@svip_hj](https://t.me/svip_hj)
 
-TG频道: `@svip_nav`
+TG频道: [@svip_nav](https://t.me/svip_nav)
 
 ## 功能
 
