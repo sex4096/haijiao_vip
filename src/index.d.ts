@@ -5,6 +5,6 @@ declare module "*.svg" {
 
 export declare global {
   interface Window {
-    app1: any;
+    VConsole: any;
   }
 }

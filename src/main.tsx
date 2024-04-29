@@ -19,6 +19,17 @@ function initSetting() {
   ReactDOM.render(myButton, pluginDiv);
 }
 
+function addVConsole() {
+  const script = document.createElement("script");
+  script.src =
+    "https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js";
+  script.onload = () => {
+    new window.VConsole();
+  };
+  document.body.appendChild(script);
+}
+addVConsole();
+
 addAnalytics();
 addStyle();
 initSetting();
