@@ -41,10 +41,12 @@ TG频道: [@svip_nav](https://t.me/svip_nav)
 
 正常Tampermonkey安装`haijiao.js`即可,~~脚本无任何依赖~~.
 
+`https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js`
+
 #### iOS:
 
-推荐使用Safari浏览器+Stay插件进行安装,在Stay通过链接新建脚本即可:
-`https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js`
+- Safari浏览器+Stay插件
+- Focus浏览器
 
 #### 安卓:
 
