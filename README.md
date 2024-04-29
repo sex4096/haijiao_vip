@@ -15,6 +15,7 @@ TG频道: [@svip_nav](https://t.me/svip_nav)
 - 解锁VIP板块帖子
 - 手机版适配
 - 解锁钻石和金币帖子
+- 屏蔽落地页弹窗
 
 ![setting1](snapshot/settings3.jpg)
 
