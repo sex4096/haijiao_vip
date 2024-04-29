@@ -58,7 +58,10 @@ const App: React.FC = () => {
             removeTops: PluginStore.get("removeTops", true),
             unlockVip: PluginStore.get("unlockVip", true),
             unlockBuy: PluginStore.get("unlockBuy", false),
-            unlockBuyHost: PluginStore.get("unlockBuyHost", ""),
+            unlockBuyHost: PluginStore.get(
+              "unlockBuyHost",
+              "https://haijiao.ku-cloud.com"
+            ),
           }}
           onFormInstanceReady={(instance) => {
             setFormInstance(instance);
