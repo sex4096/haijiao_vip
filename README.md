@@ -1,10 +1,12 @@
-# 海角社区(haijiao.com) - 解锁VIP,去广告脚本
+# 海角社区(haijiao.com) - 解锁收费视频,VIP,去广告脚本
 
 该脚本完全免费并开源,遵守MIT协议.
 
 开源代码托管在: [haijiao_vip](https://github.com/sex4096/haijiao_vip/)
 
 TG讨论群:`@svip_hj`
+
+TG频道: `@svip_nav`
 
 ## 功能
 

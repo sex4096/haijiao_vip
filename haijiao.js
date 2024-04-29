@@ -4,7 +4,7 @@
 // @namespace      https://github.com/sex4096/haijiao_vip
 // @version        0.0.12
 // @author         forgetme8
-// @description    解锁 海角社区(haijiao.com) VIP帖子,并去除网站广告, TG讨论群:@svip_hj.本插件完全免费,如果你是付费购买,请立刻退款并举报
+// @description    解锁 海角社区(haijiao.com) 收费视频,VIP,并去除网站广告, TG频道:@svip_nav.本插件完全免费,请注意甄别,避免上当受骗.
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
 // @supportURL     https://github.com/sex4096/haijiao_vip/issue
 // @updateURL      https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js
