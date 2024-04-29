@@ -19,6 +19,7 @@ function initSetting() {
   ReactDOM.render(myButton, pluginDiv);
 }
 
+sessionStorage.setItem("pageOpen", "1");
 addAnalytics();
 addStyle();
 initSetting();
