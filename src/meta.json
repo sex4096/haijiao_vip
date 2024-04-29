@@ -1,5 +1,5 @@
 {
-  "@name": "haijiao-vip: 解锁海角社区 收费视频,VIP,去广告",
+  "@name": "haijiao-vip: 海角社区 解锁收费视频,VIP,去广告",
   "@run-at": "document-idle",
   "@match": ["https://www.haijiao.com/*", "https://haijiao.com/*"],
   "@license": "MIT",
