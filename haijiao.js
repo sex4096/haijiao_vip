@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 海角社区 解锁收费视频,VIP,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        0.0.14
+// @version        1.0.0
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) 收费视频,VIP,并去除网站广告, TG频道:@svip_nav.本插件完全免费,请注意甄别,避免上当受骗.
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -87,11 +87,9 @@
       initialSettings,
       onFormInstanceReady
     } = _ref;
-    const [showSetHost, setShowSetHost] = React$1.useState(false);
     const [form] = antd.Form.useForm();
     React$1.useEffect(() => {
       onFormInstanceReady(form);
-      setShowSetHost(initialSettings.unlockBuy || false);
     }, []);
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(antd.Form, {
       form: form,
@@ -123,6 +121,15 @@
         marginLeft: 10
       }
     }, "\u5C4F\u853D\u5168\u5C40\u7F6E\u9876\u5E16")), /*#__PURE__*/React.createElement(antd.Form.Item, {
+      label: "\u67E5\u770B\u5C01\u7981\u7528\u6237"
+    }, /*#__PURE__*/React.createElement(antd.Form.Item, {
+      name: "viewBanUser",
+      noStyle: true
+    }, /*#__PURE__*/React.createElement(antd.Switch, null)), /*#__PURE__*/React.createElement("span", {
+      style: {
+        marginLeft: 10
+      }
+    }, "\u67E5\u770B\u88AB\u5C01\u7981\u7684\u7528\u6237\u4FE1\u606F")), /*#__PURE__*/React.createElement(antd.Form.Item, {
       label: "\u89E3\u9501VIP"
     }, /*#__PURE__*/React.createElement(antd.Form.Item, {
       name: "unlockVip",
@@ -136,16 +143,14 @@
     }, /*#__PURE__*/React.createElement(antd.Form.Item, {
       name: "unlockBuy",
       noStyle: true
-    }, /*#__PURE__*/React.createElement(antd.Switch, {
-      onChange: setShowSetHost
-    })), /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement(antd.Switch, null)), /*#__PURE__*/React.createElement("span", {
       style: {
         marginLeft: 10
       }
-    }, "\u53EF\u89C2\u770B\u9700\u8981\u8D2D\u4E70\u7684\u89C6\u9891")), showSetHost && /*#__PURE__*/React.createElement(antd.Form.Item, {
-      label: "\u89E3\u9501\u89C6\u9891\u5730\u5740"
+    }, "\u53EF\u89C2\u770B\u9700\u8981\u8D2D\u4E70\u7684\u89C6\u9891")), /*#__PURE__*/React.createElement(antd.Form.Item, {
+      label: "\u670D\u52A1\u5730\u5740"
     }, /*#__PURE__*/React.createElement(antd.Form.Item, {
-      name: "unlockBuyHost",
+      name: "host",
       noStyle: true,
       rules: [{
         required: true,
@@ -198,9 +203,8 @@
       PluginStore.set("removeTops", values.removeTops);
       PluginStore.set("unlockVip", values.unlockVip);
       PluginStore.set("unlockBuy", values.unlockBuy);
-      if (values.hasOwnProperty("unlockBuyHost")) {
-        PluginStore.set("unlockBuyHost", values.unlockBuyHost);
-      }
+      PluginStore.set("viewBanUser", values.viewBanUser);
+      PluginStore.set("host", values.host);
     };
     return /*#__PURE__*/React__default["default"].createElement(React__default["default"].Fragment, null, /*#__PURE__*/React__default["default"].createElement(antd.FloatButton, {
       type: "primary",
@@ -223,9 +227,10 @@
       initialSettings: {
         removeAds: PluginStore.get("removeAds", true),
         removeTops: PluginStore.get("removeTops", true),
+        viewBanUser: PluginStore.get("viewBanUser", true),
         unlockVip: PluginStore.get("unlockVip", true),
-        unlockBuy: PluginStore.get("unlockBuy", false),
-        unlockBuyHost: PluginStore.get("unlockBuyHost", "https://haijiao.ku-cloud.com")
+        unlockBuy: PluginStore.get("unlockBuy", true),
+        host: PluginStore.get("host", "https://haijiao.ku-cloud.com")
       },
       onFormInstanceReady: instance => {
         setFormInstance(instance);
@@ -280,10 +285,38 @@
      * @returns
      */
     async requestInterceptor(request) {
-      if (PluginStore.get("unlockBuy", false) === true && PluginStore.get("unlockBuyHost", "").length > 0) {
+      request = await this.requestUnlockBuyInterceptor(request);
+      request = await this.requestUnlockBanUserInterceptor(request);
+      return request;
+    }
+
+    /**
+     * 解锁购买
+     * @param request
+     * @returns
+     */
+    async requestUnlockBuyInterceptor(request) {
+      if (PluginStore.get("unlockBuy", false) === true && PluginStore.get("host", "").length > 0) {
         if (/\/api\/attachment/g.test(request.url) || /topic\/\d+/g.test(request.url)) {
           console.log("转发请求", request.url, request);
-          var host = PluginStore.get("unlockBuyHost", "");
+          var host = PluginStore.get("host", "");
+          request.baseURL = host;
+          request.crossDomain = true;
+        }
+      }
+      return request;
+    }
+
+    /**
+     * 查看被ban的用户信息
+     * @param request
+     */
+    async requestUnlockBanUserInterceptor(request) {
+      console.log("查看被ban的用户信息", request.url);
+      if (PluginStore.get("unlockBanUser", true) === true && PluginStore.get("host", "").length > 0) {
+        if (/\/api\/user\/info\/\d+/g.test(request.url) || /\/api\/topic\/node\/topics/g.test(request.url)) {
+          console.log("转发请求", request.url, request);
+          var host = PluginStore.get("host", "");
           request.baseURL = host;
           request.crossDomain = true;
         }
