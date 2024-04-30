@@ -54,21 +54,56 @@ export class Interceptor {
    * @returns
    */
   private async requestInterceptor(request: any) {
+    request = await this.requestUnlockBuyInterceptor(request);
+    request = await this.requestUnlockBanUserInterceptor(request);
+    return request;
+  }
+
+  /**
+   * 解锁购买
+   * @param request
+   * @returns
+   */
+  private async requestUnlockBuyInterceptor(request: any) {
     if (
       PluginStore.get("unlockBuy", false) === true &&
-      PluginStore.get("unlockBuyHost", "").length > 0
+      PluginStore.get("host", "").length > 0
     ) {
       if (
         /\/api\/attachment/g.test(request.url) ||
         /topic\/\d+/g.test(request.url)
       ) {
         console.log("转发请求", request.url, request);
-        var host = PluginStore.get("unlockBuyHost", "");
+        var host = PluginStore.get("host", "");
         request.baseURL = host;
         request.crossDomain = true;
       }
     }
 
+    return request;
+  }
+
+  /**
+   * 查看被ban的用户信息
+   * @param request
+   */
+  private async requestUnlockBanUserInterceptor(request: any) {
+    console.log("查看被ban的用户信息", request.url);
+
+    if (
+      PluginStore.get("unlockBanUser", true) === true &&
+      PluginStore.get("host", "").length > 0
+    ) {
+      if (
+        /\/api\/user\/info\/\d+/g.test(request.url) ||
+        /\/api\/topic\/node\/topics/g.test(request.url)
+      ) {
+        console.log("转发请求", request.url, request);
+        var host = PluginStore.get("host", "");
+        request.baseURL = host;
+        request.crossDomain = true;
+      }
+    }
     return request;
   }
 

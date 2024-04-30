@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 interface SettingsValues {
   removeAds?: boolean;
   removeTops: boolean;
+  viewBanUser?: boolean;
   unlockVip?: boolean;
   unlockBuy?: boolean;
-  unlockBuyHost?: string;
+  host?: string;
 }
 
 interface SettingsProps {
@@ -18,11 +19,9 @@ const Settings: React.FC<SettingsProps> = ({
   initialSettings,
   onFormInstanceReady,
 }) => {
-  const [showSetHost, setShowSetHost] = useState(false);
   const [form] = Form.useForm();
   useEffect(() => {
     onFormInstanceReady(form);
-    setShowSetHost(initialSettings.unlockBuy || false);
   }, []);
 
   return (
@@ -49,6 +48,13 @@ const Settings: React.FC<SettingsProps> = ({
           <span style={{ marginLeft: 10 }}>屏蔽全局置顶帖</span>
         </Form.Item>
 
+        <Form.Item<SettingsValues> label="查看封禁用户">
+          <Form.Item name="viewBanUser" noStyle>
+            <Switch />
+          </Form.Item>
+          <span style={{ marginLeft: 10 }}>查看被封禁的用户信息</span>
+        </Form.Item>
+
         <Form.Item<SettingsValues> label="解锁VIP">
           <Form.Item name="unlockVip" noStyle>
             <Switch />
@@ -58,31 +64,29 @@ const Settings: React.FC<SettingsProps> = ({
 
         <Form.Item<SettingsValues> label="解锁收费视频">
           <Form.Item name="unlockBuy" noStyle>
-            <Switch onChange={setShowSetHost} />
+            <Switch />
           </Form.Item>
           <span style={{ marginLeft: 10 }}>可观看需要购买的视频</span>
         </Form.Item>
 
-        {showSetHost && (
-          <Form.Item label="解锁视频地址">
-            <Form.Item
-              name="unlockBuyHost"
-              noStyle
-              rules={[{ required: true, message: "请输入服务器地址" }]}
-            >
-              <Input />
-            </Form.Item>
-            <div
-              style={{
-                color: "red",
-                marginTop: 5,
-              }}
-            >
-              服务器地址不定时更换
-            </div>
-            <div>请订阅TG频道:@svip_nav获取最新地址</div>
+        <Form.Item label="服务地址">
+          <Form.Item
+            name="host"
+            noStyle
+            rules={[{ required: true, message: "请输入服务器地址" }]}
+          >
+            <Input />
           </Form.Item>
-        )}
+          <div
+            style={{
+              color: "red",
+              marginTop: 5,
+            }}
+          >
+            服务器地址不定时更换
+          </div>
+          <div>请订阅TG频道:@svip_nav获取最新地址</div>
+        </Form.Item>
       </Form>
     </>
   );

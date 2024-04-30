@@ -29,9 +29,9 @@ const App: React.FC = () => {
     PluginStore.set("removeTops", values.removeTops);
     PluginStore.set("unlockVip", values.unlockVip);
     PluginStore.set("unlockBuy", values.unlockBuy);
-    if (values.hasOwnProperty("unlockBuyHost")) {
-      PluginStore.set("unlockBuyHost", values.unlockBuyHost);
-    }
+    PluginStore.set("viewBanUser", values.viewBanUser);
+
+    PluginStore.set("host", values.host);
   };
 
   return (
@@ -56,12 +56,10 @@ const App: React.FC = () => {
           initialSettings={{
             removeAds: PluginStore.get("removeAds", true),
             removeTops: PluginStore.get("removeTops", true),
+            viewBanUser: PluginStore.get("viewBanUser", true),
             unlockVip: PluginStore.get("unlockVip", true),
-            unlockBuy: PluginStore.get("unlockBuy", false),
-            unlockBuyHost: PluginStore.get(
-              "unlockBuyHost",
-              "https://haijiao.ku-cloud.com"
-            ),
+            unlockBuy: PluginStore.get("unlockBuy", true),
+            host: PluginStore.get("host", "https://haijiao.ku-cloud.com"),
           }}
           onFormInstanceReady={(instance) => {
             setFormInstance(instance);
