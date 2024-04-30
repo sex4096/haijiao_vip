@@ -53,6 +53,16 @@ TG频道: [@svip_nav](https://t.me/svip_nav)
 
 目前测试火狐浏览器一切正常
 
+## Surge|QuantumultX 模块
+
+由于移动端对于油猴的支持性很差,所以制作了这么一个脚本,用于注入解锁脚本.
+
+安装模块后,全局浏览器都可以使用脚本了.
+
+有一定使用门槛,小白建议不要折腾,老老实实浏览器添加脚本.
+
+项目地址: [haijiao_vip_vpn][https://github.com/sex4096/haijiao_vip_vpn]
+
 ## 闲聊
 
 由于拿到了`webpack_require`,基本上可以对网站所有功能进行原生调用或者修改,所以大家有什么好的想法可以和我交流~
