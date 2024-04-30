@@ -61,7 +61,7 @@ TG频道: [@svip_nav](https://t.me/svip_nav)
 
 有一定使用门槛,小白建议不要折腾,老老实实浏览器添加脚本.
 
-项目地址: [haijiao_vip_vpn][https://github.com/sex4096/haijiao_vip_vpn]
+项目地址: ![haijiao_vip_vpn][https://github.com/sex4096/haijiao_vip_vpn]
 
 ## 闲聊
 
