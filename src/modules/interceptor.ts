@@ -88,16 +88,16 @@ export class Interceptor {
    * @param request
    */
   private async requestUnlockBanUserInterceptor(request: any) {
-    console.log("查看被ban的用户信息", request.url);
-
     if (
       PluginStore.get("unlockBanUser", true) === true &&
       PluginStore.get("host", "").length > 0
     ) {
       if (
         /\/api\/user\/info\/\d+/g.test(request.url) ||
+        /\/api\/user\/news\/other_news_list/g.test(request.url) ||
         /\/api\/topic\/node\/topics/g.test(request.url)
       ) {
+        console.log("查看被ban的用户信息", request.url);
         console.log("转发请求", request.url, request);
         var host = PluginStore.get("host", "");
         request.baseURL = host;
