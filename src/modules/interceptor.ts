@@ -95,10 +95,10 @@ export class Interceptor {
       if (
         /\/api\/user\/info\/\d+/g.test(request.url) ||
         /\/api\/user\/news\/other_news_list/g.test(request.url) ||
-        /\/api\/topic\/node\/topics/g.test(request.url)
+        (/\/api\/topic\/node\/topics/g.test(request.url) &&
+          request.url.includes("userId"))
       ) {
         console.log("查看被ban的用户信息", request.url);
-        console.log("转发请求", request.url, request);
         var host = PluginStore.get("host", "");
         request.baseURL = host;
         request.crossDomain = true;

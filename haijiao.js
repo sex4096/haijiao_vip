@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 海角社区 解锁收费视频,VIP,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        1.0.1
+// @version        1.0.2
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) 收费视频,VIP,并去除网站广告, TG频道:@svip_nav.本插件完全免费,请注意甄别,避免上当受骗.
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -313,9 +313,8 @@
      */
     async requestUnlockBanUserInterceptor(request) {
       if (PluginStore.get("unlockBanUser", true) === true && PluginStore.get("host", "").length > 0) {
-        if (/\/api\/user\/info\/\d+/g.test(request.url) || /\/api\/user\/news\/other_news_list/g.test(request.url) || /\/api\/topic\/node\/topics/g.test(request.url)) {
+        if (/\/api\/user\/info\/\d+/g.test(request.url) || /\/api\/user\/news\/other_news_list/g.test(request.url) || /\/api\/topic\/node\/topics/g.test(request.url) && request.url.includes("userId")) {
           console.log("查看被ban的用户信息", request.url);
-          console.log("转发请求", request.url, request);
           var host = PluginStore.get("host", "");
           request.baseURL = host;
           request.crossDomain = true;
