@@ -77,9 +77,6 @@ telegram订阅该频道,然后通过公告来免费获取服务地址
 3. 安装海角社区vip解锁插件:
    ![chrome1](snapshot/chrome-1.png)
 
-4. 访问海角社区网站并设置插件
-   ![chrome2](snapshot/chrome-2.png)
-
 ### 安卓:
 
 1. 下载源代码到手机
