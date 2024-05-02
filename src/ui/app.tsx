@@ -39,7 +39,7 @@ const App: React.FC = () => {
       <FloatButton
         type="primary"
         tooltip="海角VIP设置"
-        style={{ right: 16 }}
+        style={{ left: 16 }}
         icon={<SettingOutlined />}
         onClick={showModal}
       ></FloatButton>

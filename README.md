@@ -25,7 +25,7 @@ TG频道: [@svip_nav](https://t.me/svip_nav)
 - 查看被封禁用户
 - 搜索可返回被封禁的用户
 
-![setting1](snapshot/settings3.jpg)
+![setting3](snapshot/settings3.jpg)
 
 ## 待开发功能
 

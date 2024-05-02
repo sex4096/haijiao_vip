@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 海角社区 解锁收费视频,VIP,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        1.0.3
+// @version        1.0.4
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) 收费视频,VIP,并去除网站广告, TG频道:@svip_nav.本插件完全免费,请注意甄别,避免上当受骗.
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -210,7 +210,7 @@
       type: "primary",
       tooltip: "\u6D77\u89D2VIP\u8BBE\u7F6E",
       style: {
-        right: 16
+        left: 16
       },
       icon: /*#__PURE__*/React__default["default"].createElement(icons.SettingOutlined, null),
       onClick: showModal
