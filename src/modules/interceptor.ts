@@ -56,6 +56,7 @@ export class Interceptor {
   private async requestInterceptor(request: any) {
     request = await this.requestUnlockBuyInterceptor(request);
     request = await this.requestUnlockBanUserInterceptor(request);
+    request = await this.requestSearchInterceptor(request);
     return request;
   }
 
@@ -99,6 +100,25 @@ export class Interceptor {
           request.url.includes("userId"))
       ) {
         console.log("查看被ban的用户信息", request.url);
+        var host = PluginStore.get("host", "");
+        request.baseURL = host;
+        request.crossDomain = true;
+      }
+    }
+    return request;
+  }
+
+  /**
+   * 解锁搜索功能
+   * @param request
+   */
+  private async requestSearchInterceptor(request: any) {
+    if (
+      PluginStore.get("unlockSearch", true) === true &&
+      PluginStore.get("host", "").length > 0
+    ) {
+      if (/\/api\/user\/search/g.test(request.url)) {
+        console.log("搜索", request.url);
         var host = PluginStore.get("host", "");
         request.baseURL = host;
         request.crossDomain = true;

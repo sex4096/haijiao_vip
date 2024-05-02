@@ -8,6 +8,12 @@ TG讨论群:[@svip_hj](https://t.me/svip_hj)
 
 TG频道: [@svip_nav](https://t.me/svip_nav)
 
+## 声明
+
+从2024/4/30晚开始,服务器被大量攻击,脚本被恶意举报,怀疑影响到某些人的利益了.
+
+再次声明,该脚本永久免费使用,不接受捐赠,不设立内群. 请一定一定注意甄别,防止上当受骗!
+
 ## 功能
 
 - 去广告
@@ -17,6 +23,7 @@ TG频道: [@svip_nav](https://t.me/svip_nav)
 - 解锁钻石和金币帖子
 - 屏蔽落地页弹窗
 - 查看被封禁用户
+- 搜索可返回被封禁的用户
 
 ![setting1](snapshot/settings3.jpg)
 
@@ -37,22 +44,79 @@ TG频道: [@svip_nav](https://t.me/svip_nav)
 
 该脚本对`底层请求`添加了`拦截器`, 通过修改请求来达到解锁视频,VIP,去广告等功能,不对页面元素做任何修改
 
+## 免费获取服务地址
+
+`因为脚本服务频繁被攻击,所以服务地址将经常变动`
+
+telegram订阅该频道,然后通过公告来免费获取服务地址
+[https://t.me/svip_nav](https://t.me/svip_nav)
+
 ## 安装
 
-#### PC端:
+### PC端:
 
-正常Tampermonkey安装`haijiao.js`即可,~~脚本无任何依赖~~.
+##### 第一种方式:
+
+正常Tampermonkey安装`haijiao.js`即可
 
 `https://raw.githubusercontent.com/sex4096/haijiao_vip/master/haijiao.js`
 
-#### iOS:
+##### 第二种方式:
+
+1. 下载源代码到本地: `https://github.com/sex4096/haijiao_vip/blob/master/haijiao.js`
+2. chrome谷歌浏览器安装 <b>篡改猴</b> 插件:
+
+   ```
+   插件下载地址
+
+   https://tampermonkey.net/
+
+   或者通过谷歌应用商店搜索 篡改猴
+   ```
+
+3. 安装海角社区vip解锁插件:
+   ![chrome1](snapshot/chrome-1.png)
+
+4. 访问海角社区网站并设置插件
+   ![chrome2](snapshot/chrome-2.png)
+
+### 安卓:
+
+1. 下载源代码到手机
+
+   ```
+   源代码下载地址
+
+   https://github.com/sex4096/haijiao_vip/blob/master/haijiao.js
+   ```
+
+2. 下载火狐浏览器
+   ```
+   安卓手机打开网址 [https://www.firefox.com.cn/](https://www.firefox.com.cn/) 下载火狐浏览器
+   ```
+3. 火狐浏览器安装 <b>篡改猴</b> 插件
+
+   ```
+   在火狐浏览器中，输入网址 https://tampermonkey.net/
+
+   在官网安装篡改猴插件
+   ```
+
+   ![firfox](snapshot/firfox-1.png)
+
+4. 安装海角社区vip解锁插件
+   ```
+   进入篡改猴的控制面板，在实用工具里，导入下载好的代码文件
+   ```
+
+### iOS:
 
 - Safari浏览器+Stay插件
 - Focus浏览器
 
-#### 安卓:
-
-目前测试火狐浏览器一切正常
+```
+基本安装方法同安卓一样,省略吧
+```
 
 ## Surge|QuantumultX 模块
 
@@ -63,12 +127,6 @@ TG频道: [@svip_nav](https://t.me/svip_nav)
 有一定使用门槛,小白建议不要折腾,老老实实浏览器添加脚本.
 
 项目地址: [haijiao_vip_vpn](https://github.com/sex4096/haijiao_vip_vpn)
-
-## 闲聊
-
-由于拿到了`webpack_require`,基本上可以对网站所有功能进行原生调用或者修改,所以大家有什么好的想法可以和我交流~
-
-建立了一个TG群:`@svip_hj`,大家可以来交流. PS:禁止讨论反动言论,禁止讨论幼女/人兽等.
 
 ## 贡献
 
