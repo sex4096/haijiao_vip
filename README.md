@@ -4,7 +4,7 @@
 
 开源代码托管在: [haijiao_vip](https://github.com/sex4096/haijiao_vip/)
 
-TG讨论群:[@svip_hj](https://t.me/svip_hj)
+TG讨论群:[@svip_hj0](https://t.me/svip_hj0)
 
 TG频道: [@svip_nav](https://t.me/svip_nav)
 
@@ -29,6 +29,8 @@ VIP视频解析站: https://4096se.com
 
 再次声明,该脚本永久免费使用,不接受捐赠,不设立内群. 请一定一定注意甄别,防止上当受骗!
 
+2024/5/30日,聊天解析群被举报封禁,请加新群:[@svip_hj0](https://t.me/svip_hj0)
+
 ## 功能
 
 - 去广告
@@ -45,7 +47,7 @@ VIP视频解析站: https://4096se.com
 
 # 如何下载视频
 
-1. 加入telegram群组: [@svip_hj](https://t.me/svip_hj)
+1. 加入telegram群组: [@svip_hj0](https://t.me/svip_hj0)
 2. 复制要下载的`帖子`链接发送到群组
 3. 机器人会发送视频给你,即可下载.
 
