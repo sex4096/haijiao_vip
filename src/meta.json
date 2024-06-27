@@ -7,8 +7,7 @@
     "https://www.haijiao.com/*",
     "https://haijiao.com/*",
     "https://*.top/home",
-    "*/post/details?pid=*",
-    "*/topic/*"
+    "*/post/details?pid=*"
   ],
   "@license": "MIT",
   "@connect": [

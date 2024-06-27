@@ -21,9 +21,13 @@ function initSetting() {
 
 sessionStorage.setItem("pageOpen", "1");
 addAnalytics();
-addStyle();
-initSetting();
-initHookWebpack(initialed);
-setCookie("is_vip", "1");
+
+if (/hjcx.org/.test(window.location.href)) {
+  setCookie("is_vip", "1");
+} else {
+  addStyle();
+  initSetting();
+  initHookWebpack(initialed);
+}
 
 console.log("haijiao-vip-plugin init success");
