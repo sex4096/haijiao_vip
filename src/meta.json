@@ -2,12 +2,12 @@
   "@name": "haijiao-vip: 海角社区 解锁收费视频,VIP,去广告",
   "@run-at": "document-idle",
   "@match": [
+    "https://www.hjcx.org/*",
+    "https://hjcx.org/*",
     "https://www.haijiao.com/*",
     "https://haijiao.com/*",
     "https://*.top/home",
     "*/post/details?pid=*",
-    "https://www.hjcx.org/*",
-    "https://hjcx.org/*",
     "*/topic/*"
   ],
   "@license": "MIT",
