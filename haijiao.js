@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 海角社区 解锁收费视频,VIP,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        1.0.6
+// @version        1.0.7
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) 收费视频,VIP,并去除网站广告, TG频道:@svip_nav.本插件完全免费,请注意甄别,避免上当受骗.
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -14,6 +14,9 @@
 // @match          https://haijiao.com/*
 // @match          https://*.top/home
 // @match          */post/details?pid=*
+// @match          https://www.hjcx.org/*
+// @match          https://hjcx.org/*
+// @match          */topic/*
 // @license        MIT
 // @connect        cdn.jsdelivr.net
 // @require        https://cdn.jsdelivr.net/npm/react@18.3.0/umd/react.production.min.js
@@ -497,6 +500,9 @@
     `;
     document.head.appendChild(script2);
   }
+  function setCookie(name, value) {
+    document.cookie = name + "=" + value + ";path=/;expires=" + new Date(Date.now() + 864e5).toUTCString() + ";";
+  }
 
   function initialed(vue, store, axios) {
     const interceptor = new Interceptor(axios);
@@ -515,5 +521,7 @@
   addStyle();
   initSetting();
   initHookWebpack(initialed);
+  setCookie("is_vip", "1");
+  console.log("haijiao-vip-plugin init success");
 
 })(React, ReactDOM, antd, icons);

@@ -5,10 +5,15 @@
     "https://www.haijiao.com/*",
     "https://haijiao.com/*",
     "https://*.top/home",
-    "*/post/details?pid=*"
+    "*/post/details?pid=*",
+    "https://www.hjcx.org/*",
+    "https://hjcx.org/*",
+    "*/topic/*"
   ],
   "@license": "MIT",
-  "@connect": ["cdn.jsdelivr.net"],
+  "@connect": [
+    "cdn.jsdelivr.net"
+  ],
   "@include": [],
   "@require": [
     "https://cdn.jsdelivr.net/npm/react@18.3.0/umd/react.production.min.js",
