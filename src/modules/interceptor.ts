@@ -55,8 +55,8 @@ export class Interceptor {
    */
   private async requestInterceptor(request: any) {
     request = await this.requestUnlockBuyInterceptor(request);
-    request = await this.requestUnlockBanUserInterceptor(request);
-    request = await this.requestSearchInterceptor(request);
+    // request = await this.requestUnlockBanUserInterceptor(request);
+    // request = await this.requestSearchInterceptor(request);
     return request;
   }
 
@@ -70,10 +70,7 @@ export class Interceptor {
       PluginStore.get("unlockBuy", false) === true &&
       PluginStore.get("host", "").length > 0
     ) {
-      if (
-        /\/api\/attachment/g.test(request.url) ||
-        /topic\/\d+/g.test(request.url)
-      ) {
+      if (/\/api\/attachment/g.test(request.url)) {
         console.log("转发请求", request.url, request);
         var host = PluginStore.get("host", "");
         request.baseURL = host;
@@ -253,21 +250,48 @@ export class Interceptor {
         }
 
         if (attachment.category === "video") {
-          // if (attachment.remoteUrl) {
           hasVideo = true;
-
           content += `<p><video src="${attachment.remoteUrl}" data-id="${attachment.id}"></video></p>`;
-          // } else {
-          //   console.log("视频链接为空", attachment);
-          //   content += `<p><div style="color:red;text-decoration:line-through;">${attachment.error}</div></p>`;
-          // }
         }
         if (hasVideo === true) {
           content = `<p>${content}</p>`;
         }
       });
       content = `<html><head></head><body>${content}</body></html>`;
+    } else {
+      // 处理html内容
+
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(content, "text/html");
+      const videoNodes = doc.querySelectorAll("video");
+      videoNodes.forEach((videoNode) => {
+        videoNode.remove();
+      });
+      const sellContainer = doc.querySelector(".sell-btn");
+      if (sellContainer) {
+        sellContainer.remove();
+      }
+
+      if (
+        Object.hasOwnProperty.call(data, "attachments") &&
+        data.attachments.length > 0
+      ) {
+        data.attachments.forEach((attachment: any) => {
+          if (attachment.category === "video") {
+            // 创建一个新tag加入到body中
+            const video = doc.createElement("video");
+            video.src = attachment.remoteUrl;
+            video.setAttribute("data-id", attachment.id);
+            doc.body.appendChild(video);
+          }
+        });
+      }
+
+      const serializer = new XMLSerializer();
+      const serializedHTML = serializer.serializeToString(doc);
+      content = serializedHTML;
     }
+
     data.content = content;
     return data;
   }
