@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name           haijiao-vip: 海角社区 解锁收费视频,VIP,去广告
 // @namespace      https://github.com/sex4096/haijiao_vip
-// @version        1.1.0
+// @version        1.1.1
 // @author         forgetme8
 // @description    解锁 海角社区(haijiao.com) 收费视频,VIP,并去除网站广告, TG频道:@svip_nav.本插件完全免费,请注意甄别,避免上当受骗.
 // @homepage       https://github.com/sex4096/haijiao_vip#readme
@@ -522,20 +522,6 @@
     script.href = "https://cdn.jsdelivr.net/npm/antd@5.16.4/dist/reset.min.css";
     document.documentElement.appendChild(script);
   }
-  function addAnalytics() {
-    const script = document.createElement("script");
-    script.src = "https://www.googletagmanager.com/gtag/js?id=G-NQ08DH5N3T";
-    script.async = true;
-    document.head.appendChild(script);
-    const script2 = document.createElement("script");
-    script2.innerHTML = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-NQ08DH5N3T');
-    `;
-    document.head.appendChild(script2);
-  }
   function setCookie(name, value) {
     document.cookie = name + "=" + value + ";path=/;expires=" + new Date(Date.now() + 864e5).toUTCString() + ";";
   }
@@ -553,7 +539,6 @@
     ReactDOM__default["default"].render(myButton, pluginDiv);
   }
   sessionStorage.setItem("pageOpen", "1");
-  addAnalytics();
   if (/hjcx.org/.test(window.location.href)) {
     setCookie("is_vip", "1");
   } else {

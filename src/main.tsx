@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { initHookWebpack } from "./modules/webpack";
 import App from "./ui/app";
 import { Interceptor } from "./modules/interceptor";
-import { addAnalytics, addStyle, setCookie } from "./modules/util";
+import { addStyle, setCookie } from "./modules/util";
 
 function initialed(vue: any, store: any, axios: any) {
   const interceptor = new Interceptor(axios);
@@ -20,7 +20,6 @@ function initSetting() {
 }
 
 sessionStorage.setItem("pageOpen", "1");
-addAnalytics();
 
 if (/hjcx.org/.test(window.location.href)) {
   setCookie("is_vip", "1");
