@@ -104,8 +104,8 @@ const Settings: React.FC<SettingsProps> = ({
             <div>2. 私信我获取服务地址,不定期晚上统一回复.</div>
             <div>
               3. 通过
-              <a href="https://hjcx.org" target="_blank">
-                https://hjcx.org
+              <a href="https://hjcx.cc" target="_blank">
+                https://hjcx.cc
               </a>
               观看,该地址不需要填写服务地址即可观看.
             </div>

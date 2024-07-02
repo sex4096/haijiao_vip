@@ -4,6 +4,8 @@
   "@match": [
     "https://www.hjcx.org/*",
     "https://hjcx.org/*",
+    "https://www.hjcx.cc/*",
+    "https://hjcx.cc/*",
     "https://www.haijiao.com/*",
     "https://haijiao.com/*",
     "https://*.top/home",

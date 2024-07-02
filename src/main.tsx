@@ -21,7 +21,7 @@ function initSetting() {
 
 sessionStorage.setItem("pageOpen", "1");
 
-if (/hjcx.org/.test(window.location.href)) {
+if (/hjcx/.test(window.location.href)) {
   setCookie("is_vip", "1");
 } else {
   addStyle();
